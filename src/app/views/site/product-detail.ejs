@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%-include("layout/head", {title: "Chi tiết sản phẩm"})%>
+    </head>
+
+    <body>
+        <!-- Top bar Start -->
+        <%-include("layout/menu")%>
+        <!-- Bottom Bar End --> 
+        
+        <!-- Breadcrumb Start -->
+        <div class="breadcrumb-wrap">
+            <div class="container-fluid">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Chi tiết sản phẩm <%=product.name%></li>
+                </ul>
+            </div>
+        </div>
+        <!-- Breadcrumb End -->
+        
+        <!-- Product Detail Start -->
+        <div class="product-detail">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="product-detail-top">
+                            <div class="row align-items-center">
+                                <div class="col-md-5">
+                                    <div class="product-slider-single normal-slider">
+                                        <img src="/static/images/<%=product.thumbnail%>" alt="Product Image">
+                                    </div>
+                                   
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="product-content">
+                                        <div class="title"><h2><%=product.name%></h2></div>
+                                        <div class="ratting">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                        <div class="price">
+                                            <h4>Giá:</h4>
+                                            <p><%=product.price.toLocaleString('vi-VN')%>đ</p>
+                                        </div>
+                                    <form method="post" action="/add-to-cart">
+                                        <input type="hidden" name="id" value=<%=product.id%>>
+                                        <div class="quantity">
+                                            <h4>Số lượng:</h4>
+                                            <div class="qty">
+                                                <button id="btnmul" type="button" class="btn-minus" disabled = "true" style = "background-color:rgb(120, 120, 120)"><i class="fa fa-minus"></i></button>
+                                                <input id="inputprice" type="text" name="qty"value="1" readonly="true">
+                                                <button id="btnadd" type="button" class="btn-plus" ><i class="fa fa-plus" ></i></button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="p-color">
+                                            <h4>Màu:</h4>
+                                            <div class="btn-group btn-group-sm">
+                                                <% if(product.color_id.while){%>
+                                                    <div class="while"><input checked="checked" name="color" type="radio" value="trắng"> trắng</div>
+                                                <% }%>
+                                                <% if(product.color_id.black){%>
+                                                    <div class="black"><input checked="checked" name="color" type="radio" value="đen"> đen</div>
+                                                <% }%>
+                                                <% if(product.color_id.yellow){%>
+                                                    <div class="yellow"><input checked="checked" name="color" type="radio" value="vàng"> vàng</div>
+                                                <% }%>
+                                                <% if(product.color_id.blue){%>
+                                                    <div class="blue"><input checked="checked" name="color" type="radio" value="xanh"> xanh</div>
+                                                <% }%>
+                                                <% if(product.color_id.red){%>
+                                                    <div class="red"><input checked="checked" name="color" type="radio" value="đỏ"> đỏ</div>
+                                                <% }%>
+                                        
+                                            </div> 
+                                        </div>
+                                        <% if(product.quantity==0){%>
+                                          <p id="deleteprd">Hết hàng</p>
+                                        <% } else {%>
+                                        <div class="action">
+                                            <button class="btn" type="submit"><i class="fa fa-shopping-bag"></i>Mua ngay</button>
+                                        </div>
+                                        <% }%>
+                                    </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row product-detail-bottom">
+                            <div class="col-lg-12">
+                                <ul class="nav nav-pills nav-justified">
+                                    <li  class="nav-item">
+                                        <a id="motasp" class="nav-link active" data-toggle="pill" href="#description">Cấu hình <%=product.name%></a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="pill" href="#specification">Các khuyến mãi</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="pill" href="#reviews"> Đánh giá 
+                                            <% var i=0; for(c of comments) { i++ %>
+                                            <% }  %>
+                                            (<%=i%>)</a>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div id="description" class="container tab-pane active">
+                                       <%-product.description%>
+                                    </div>
+                                    <div id="specification" class="container tab-pane fade">
+                                    <p><b>1.Bảo hành:</b> <%=product.warranty%></p>
+                                    <p><b>2.Phụ kiện đi kèm:</b> <%=product.accessories%></p>
+                                    <p><b>3.Khuyến mãi:</b> <%=product.promotion%></p>
+                                        
+                                    </div>
+                                    <div id="reviews" class="container tab-pane fade">
+                                        <% for(comment of comments) { %>
+                                            <div class="reviews-submitted">
+                                                <div class="reviewer">
+                                                    <%= comment.full_name %> - <span><%=comment.createdAt.toLocaleString('vi-VN')%></span></div>
+                                                <div class="ratting">
+                                                    <% if(comment.rating >= 1) {  %> <i class="fa fa-star"></i>
+                                                        <% } %>
+                                                            <% if(comment.rating >= 2) {  %> <i class="fa fa-star"></i>
+                                                                <% } %>
+                                                                    <% if(comment.rating >= 3) {  %> <i class="fa fa-star"></i>
+                                                                        <% } %>
+                                                                            <% if(comment.rating >= 4) {  %> <i class="fa fa-star"></i>
+                                                                                <% } %>
+                                                                                    <% if(comment.rating >= 5) {  %> <i class="fa fa-star"></i>
+                                                                                        <% } %>
+                                                </div>
+                                                <p>
+                                                    <%=comment.body%>
+                                                </p>
+                                                
+                                            </div>
+                                            <% } %>
+                                            <div class="panel-footer">
+                                                <nav aria-label="Page navigation example">
+                                                    <ul class="pagination">
+                                                        <%if(page > 1){%>
+                                                            <li  class="page-item"><a class="page-link" href="/product-<%=product.slug%>.<%=product._id%>/?page=<%=page-1%>">&laquo;</a></li>
+                                                            <%}%>
+                                                            <%for(x in pages){%>
+                                                            <li  class="page-item <%=pages[x]===page? 'active': ''%>"><a class="page-link" href="/product-<%=product.slug%>.<%=product._id%>/?page=<%=pages[x]%>"><%=pages[x]%></a></li>
+                                                            <%}%>
+                                                            <%if(page < totalPage){%>
+                                                            <li  class="page-item"><a class="page-link" href="/product-<%=product.slug%>.<%=product._id%>/?page=<%=page+1%>">&raquo;</a></li>
+                                                            <%}%>
+                                                           
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                            
+                                                <form  method="post">
+                                                    <div class="reviews-submit">
+                                                        <div class="field">
+                                                            <h4>Viết đánh giá của bạn:</h4>
+                                                            <div class="control">
+                                                                <div class="rating ratingbl">
+                                                                    <input  type="radio" name="star" id="star1" value="5"><label for="star1">
+                                                                </label>
+                                                                    <input  type="radio" name="star" id="star2" value="4"><label for="star2">
+                                                                </label>
+                                                                    <input  type="radio" name="star" id="star3" value="3"><label for="star3">
+                                                                </label>
+                                                                    <input  type="radio" name="star" id="star4" value="2"><label for="star4">
+                                                                </label>
+                                                                    <input  type="radio" name="star" id="star5" value="1"><label for="star5">
+                                                                </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+    
+                                                        <div class="row form clearfix">
+                                                            <div class="col-sm-6">
+                                                                <input name="full_name" required type="text" placeholder="Tên">
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <input name="email" required  type="email" placeholder="Email">
+                                                            </div>
+                                                            <div class="col-sm-12">
+                                                                <textarea name="body"  placeholder="Đánh giá..." required></textarea>
+                                                            </div>
+                                                            
+                                                            <div class="col-sm-12">
+                                                                <button type="submit" name="sbm" class="btn btn-primary">Gửi</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="product">
+                            <div class="section-header">
+                                <h1>Sản phẩm tương tự</h1>
+                            </div>
+
+                            <div class="row align-items-center product-slider product-slider-3">
+                                <% for(let product of relatedProducts){%>
+                                    <div id="div-phone" class="col-md-4">
+                                        <div class="product-item">
+                                            <div class="product-title">
+                                                <a href="/product-<%=product.slug%>.<%=product._id%>"><%=product.name%></a>
+                                                <div class="ratting">
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                </div>
+                                            </div>
+                                            <div class="product-image">
+                                                <a href="/product-<%=product.slug%>.<%=product._id%>">
+                                                    <img src="/static/images/<%=product.thumbnail%>" alt="Product Image">
+                                                </a>
+                                                <div class="product-action">
+                                                    
+                                                   
+                                                    <!-- <a href="/product-<%=product.slug%>.<%=product._id%>"><i class="fa fa-search"></i></a> -->
+                                                </div>
+                                            </div>
+                                            <div id="product-price1" class="product-price">
+                                                <h3><span><%=product.price.toLocaleString('vi-VN')%>đ</span></h3>
+                                                <a class="btn" href="/product-<%=product.slug%>.<%=product._id%>"><i class="fa fa-shopping-cart"></i>Mua ngay</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% }%>  
+                            
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Side Bar Start -->
+                    <%-include("layout/sidebar")%>
+                    <!-- Side Bar End -->
+                </div>
+            </div>
+        </div>
+        <!-- Product Detail End -->
+        
+        <!-- Brand Start -->
+        <div class="brand">
+            <div class="container-fluid">
+                <div class="brand-slider">
+                    <div class="brand-item"><img src="img/brand-1.png" alt=""></div>
+                    <div class="brand-item"><img src="img/brand-2.png" alt=""></div>
+                    <div class="brand-item"><img src="img/brand-3.png" alt=""></div>
+                    <div class="brand-item"><img src="img/brand-4.png" alt=""></div>
+                    <div class="brand-item"><img src="img/brand-5.png" alt=""></div>
+                    <div class="brand-item"><img src="img/brand-6.png" alt=""></div>
+                </div>
+            </div>
+        </div>
+        <!-- Brand End -->
+        
+        <!-- Footer Start -->
+        <style>
+            
+            .black{
+                color: black;
+                
+                margin-right: 7px;
+                
+            }
+            .while{
+                
+                color: #FF6F61;
+                
+                margin-right: 7px;
+                
+            }
+            .red{
+                color: red;
+               
+                margin-right: 7px;
+               
+            }
+            .blue{
+                color: blue;
+                margin-right: 7px;
+               
+            }
+            .yellow{
+                color: rgb(243, 243, 29);
+                margin-right: 7px;
+               
+            }
+            .rating {
+                display: flex;
+                transform: translateX(0) rotateY(180deg);
+                float: left;
+                margin-bottom: 5px;
+            }
+
+            .rating input {
+                display: none;
+            }
+
+            .rating label {
+                display: block;
+                cursor: pointer;
+                width: 50px;
+            }
+
+            .rating label:before {
+                content: '\f005';
+                font-family: 'Font Awesome 5 Free';
+                position: relative;
+                top: 0px;
+                display: block;
+                font-size: 30px;
+                color: gray;
+            } 
+
+            .rating label:after {
+                content: '\f005';
+                font-family: 'Font Awesome 5 Free';
+                position: absolute;
+                top: 0px;
+                display: block;
+                font-size: 30px;
+                color: #FF6F61;
+                opacity: 0;
+                transition: .2s;
+                text-shadow: 0 2px 5px rgba(0, 0, 0, .5);
+            }
+            
+
+            .rating label:hover:after,
+            .rating label:hover~label:after,
+            .rating input:checked~label:after {
+                opacity: 1;
+            }
+            .clearfix {
+                clear: both;
+            }
+            #motasp{
+                width: 320px;
+            }
+            #div-phone{
+                padding-left: 10px;
+               
+            }
+            #deleteprd{
+                color: red;
+                font-weight: bold;
+                text-decoration-line:line-through;
+            }
+            .product-item .product-price{
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            
+            
+        </style>
+        <%-include("layout/footer")%>
+        <script> 
+        
+           
+        
+           var total = document.getElementById('inputprice');
+
+                document.getElementById('btnadd').addEventListener('click', function() {
+                if (total.value > 1) {
+                    console.log('enabled');
+                    document.getElementById('btnmul').disabled = false;
+                    document.getElementById('btnmul').style = "background-color:#FF6F61";
+                }
+
+                });
+
+                document.getElementById('btnmul').addEventListener('click', function() {
+                if (total.value ==1 ) {
+                    console.log('disabled');
+                    document.getElementById('btnmul').disabled = true;
+                    document.getElementById('btnmul').style = "background-color:rgb(120, 120, 120)";
+                }
+                });
+                
+        </script>
+    </body>
+</html>

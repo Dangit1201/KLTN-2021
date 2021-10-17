@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%-include("../layout/head", {title: "Trang Chủ"})%>
+    </head>
+
+    <body>
+        <!-- Top bar Start -->
+        <%-include("../layout/menu")%>
+        <!-- Bottom Bar End --> 
+        
+        <!-- Breadcrumb Start -->
+        <div class="breadcrumb-wrap">
+            <div class="container-fluid">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+            
+                    <li class="breadcrumb-item active">Đăng nhập</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Breadcrumb End -->
+        
+        <!-- Login Start -->
+        <div id="wrapper" class="login">
+            <div  class="container-fluid">
+                <div  class="row">
+                    <div  class="col-lg-6 mx-auto">
+                        <form role="form" method="post">
+                            <div id="loginsite" class="login-form">
+                                <div class="row">
+                                    <legend class="text-center"><b>Đăng nhập</b></legend>
+                                    <% if(data && data.error){%>
+                                        <div class="col-md-12 alert alert-danger"><%=data.error%></div>
+                                    <% }%>
+                                    <div class="col-md-6">
+                                        <label>Email</label>
+                                        <input class="form-control" name="email" type="email" required placeholder="Nhập email" autofocus>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Mật khẩu</label>
+                                        <input class="form-control" name="pass" type="password" required placeholder="Nhập mật khẩu" value="">
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" id="newaccount">
+                                            <label class="custom-control-label" for="newaccount">Nhớ đăng nhập</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 text-center">
+                                        <button class="btn" type="submit">Đăng nhập</button>
+                                        
+                                    </div>
+                                    <div id="btnregistersite"class="col-md-12 text-center">
+                                        <a href="/forgetpassword">Quên mật khẩu?</a>
+                                    </div>
+                                    <div class="col-md-12 ">
+                                        <hr>
+                                    </div>
+                                    <div class="col-md-12 text-center">
+                                        <button id="registersite" class="btn">Tạo tài khoản mới</button>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </form>    
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Login End -->
+        <style>
+            #btnregistersite{
+                margin-top: 20px;
+            }
+            #registersite{
+                background :#ec1d1d;
+                
+            }   
+        </style>
+        
+        <!-- Footer Start -->
+        <%-include("../layout/footer")%>
+        <script>
+            $('#registersite').click(function() {
+            window.location.href = '/register';
+            return false;
+            });
+        </script>
+    </body>
+</html>

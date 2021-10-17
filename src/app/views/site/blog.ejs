@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%-include("layout/head", {title: "24h công nghệ"})%>
+    </head>
+
+    <body>
+        <!-- Top bar Start -->
+        <%-include("layout/menu")%>
+        <!-- Bottom Bar End -->  
+        
+        <!-- Breadcrumb Start -->
+        <div class="breadcrumb-wrap">
+            <div class="container-fluid">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">24h công nghệ</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Breadcrumb End -->
+        
+        <!-- Product List Start -->
+        <div class="product-view">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="row">
+                            <% for(let blog of blogs){%>
+                            
+                            <div class="col-md-12 bloglink">
+                                <div >
+                                   <a href="/blogdetail/<%=blog.id%>"> <img  id="imgleft" class="card-img-top" src="/static/images/<%=blog.thumbnail%>" alt="Card image cap" width="200px" height="125px"></a>
+                                    <h5 class="card-title titlecom"><a id="idcontent" href="/blogdetail/<%=blog.id%>"><%=blog.title%></a></h5>
+                                    <p class="timepost"><%=blog.nameuser%> &emsp;<%=blog.updatedAt.toLocaleString('vi-VN')%></p>
+                                    
+                                </div>
+                            </div>
+                           
+                            <% }%> 
+                                      
+                        </div>
+                        
+                        <!-- Pagination Start -->
+                        <div id="pagisort" class="col-md-12">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center">
+                        
+                                        <%if(page>1){%>
+                                            <li class="page-item"><a class="page-link"
+                                                    href="/blog/?page=<%= page-1%>">&laquo;</a>
+                                            </li>
+                                            <%}%>
+                                                <%for(x in pages){%>
+                                                    <%if(pages[x]!=='...'){%>
+                                                        <li class="page-item <%=pages[x]===page ? 'active':''%>"><a
+                                                                class="page-link"
+                                                                href="/blog/?page=<%= pages[x]%>">
+                                                                <%=pages[x]%>
+                                                            </a></li>
+                                                        <%} else {%>
+                                                            <li class="page-item"><a class="page-link"
+                                                                    onclick="return false"
+                                                                    href="/blog/?page=<%= pages[x]%>">
+                                                                    <%=pages[x]%>
+                                                                </a></li>
+                                                            <%}%>
+                                                                <%}%>
+                                                                    <%if(page<totalPage){%>
+                                                                        <li class="page-item"><a class="page-link"
+                                                                                href="/blog/?page=<%= page+1%>">&raquo;</a>
+                                                                        </li>
+                                                                        <%}%>
+                                       
+                                </ul>
+                            </nav>
+                        </div>
+
+                       
+                    </div>           
+                    
+                    <!-- Side Bar Start -->
+                    <%-include("layout/sidebar")%>
+                    <!-- Side Bar End -->
+                </div>
+            </div>
+        </div>
+        <!-- Product List End -->  
+        
+        <!-- Brand Start -->
+        
+        <!-- Brand End -->
+        
+        <!-- Footer Start -->
+        <%-include("layout/footer")%>
+        
+        
+        <style>
+           #imgleft{
+            float:left;
+            width:200px;
+            height:125px;
+           }
+           #cardbody{
+            float:right;
+           }
+           .bloglink{
+            background: white;
+            padding: 15px 0;
+            border-bottom: 1px solid #eee;
+           }
+           .titlecom {
+                display: -webkit-box;
+                -webkit-line-clamp: 4;
+                -webkit-box-orient: vertical;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                padding-left: 10px;
+            }
+            .timepost {
+                display: block;
+                overflow: hidden;
+                font-size: 12px;
+                color: #999;
+                padding-left: 10px;
+                margin: 0;
+            }
+            .pageblog{
+                margin-top: 20px;
+            }
+            #idcontent{
+                color :#333333;
+                font-weight: bold;
+                font-style: normal;
+            }
+            #idcontent:hover{
+                color: #288ad6;
+            }
+            #pagisort{
+                margin-top: 25px;
+            }
+           
+        </style>
+    </body>
+</html>

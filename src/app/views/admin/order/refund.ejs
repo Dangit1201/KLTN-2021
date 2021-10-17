@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <%- include('../layout/head.ejs', {title: "Danh sách đơn hàng chưa xử lý" })%>
+
+</head>
+
+<body>
+    <%- include('../layout/header.ejs') %>
+		
+	<%- include('../layout/sidebar.ejs') %><!--/.sidebar-->
+		
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+		<div class="row">
+			<ol class="breadcrumb">
+				<li><a href="/admin"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
+				<li class="active">Hoàn tiền </li>
+			</ol>
+		</div><!--/.row-->
+		
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header">Danh sách đơn hàng cần hoàn tiền</h1>
+			</div>
+		</div><!--/.row-->
+		
+
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-body">
+                        <table id="example"
+                            data-toolbar="#toolbar"
+                            data-toggle="table">
+
+						    <thead>
+						    <tr>
+                                <th>TT</th>
+                                <th>Mã đơn hàng</th>
+                                <th>Tên khách hàng</th>
+                                <th>Số điện thoại</th>
+                                <th>Ngày đặt hàng</th>
+                                <th>Số sản phẩm</th>
+                                <th>Tổng tiền</th>
+                                <th>Hành động</th>
+                                
+						    </tr>
+                            </thead>
+                            <tbody id="divpagination">
+                                <% let count=1 %>
+                                <%for(x in orders){%>
+                                <tr>
+                                    <td><%=count++ %></td>
+                                    <td ><%=orders[x].idorder%></td>
+                                    <td ><%=orders[x].full_name%></td>
+                                    <td ><%=orders[x].phone%></td> 
+                                    <td id="date"><%=orders[x].createdAt.toLocaleDateString('vi-VN')%></td>
+                                    <td id="idprd"><%=orders[x].totalprd%></td>
+                                    
+                                    <td><%=new Intl.NumberFormat("vi-VN", {style: "currency", currency: "VND"}).format(orders[x].totalprice)%></td>
+                                    
+                                    <td class="form-group">
+                                        <a class="btn btn-primary"  data-id="<%=orders[x].idorder%>" data-title="<%=orders[x].full_name%>" data-toggle="modal" data-target="#delete-modal-transport"><i class="glyphicon glyphicon-zoom-out" ></i></a>
+                                    
+                                    </td>
+                                </tr>
+                                <%}%>
+                                
+                            </tbody>
+						</table>
+                    </div>
+
+                    <form name="delete-form-danhmuc" method="post"></form>
+                           <!--  model detail -->
+                           <div class="modal" id="modalshow" role="dialog">
+                            <div class="modal-dialog modal-lg" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="modaltitle">Chi tiết đơn hàng</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+
+                                <div class="modal-body">
+                                </div>
+                               
+                                <div class="modal-footer">
+                                <button  id="btn-delete-form" type="button" >Hoàn tiền</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                   
+				</div>
+			</div>
+		</div><!--/.row-->	
+	</div>	<!--/.main-->
+
+	<%- include('../layout/footer.ejs')%>
+    <script>
+         $(document).ready(function() {
+            $('#example').DataTable({
+                "language": {
+                "lengthMenu": "Hiện _MENU_ đơn hàng",
+                "zeroRecords": "Không tìm kiếm ",
+                "info": "Trang _PAGE_ của _PAGES_",
+                "infoEmpty": "Không có đơn hàng nào",
+                "infoFiltered": "(Lọc từ _MAX_ đơn hàng)"
+            }
+            });
+        } );
+    </script>
+    <script>
+       
+        $(document).ready(function(){
+           $('.btn').click(function(){
+               var data = $(this).data('id');
+               $.ajax({
+                   type:"POST",
+                   url:"/admin/orderdetail",
+                   data:{data:data},
+                   success:function(response){
+                       $('.modal-body').html(response);
+                       $('#modalshow').modal('show');
+
+                   },
+                   error:function(xhr,ajaxOptions, thrownError){
+                       alert("xay ra loi");
+                   },
+                   
+               })
+                var formdele = document.forms['delete-form-danhmuc'];
+                var btndele = document.getElementById('btn-delete-form');
+                btndele.onclick = function(){
+                    formdele.action='/admin/orderdetail/'+data;
+                    formdele.submit();
+                }
+           })
+       })
+       
+        
+    </script>
+    <style>
+        #btn-delete-form{
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        #btn-delete-form:hover,
+        #btn-delete-form:active
+        #btn-delete-form:focus {
+            
+            color: #ffffff;
+            background: green;
+            box-shadow: none;
+        }
+        .dataTables_length{
+            margin-top: 12px;
+        }
+        #example_filter{
+            margin-top: 12px;
+            margin-right: 12px;
+        }
+        th ,td{
+		            text-align: center;
+	    }
+        #example_info{
+            margin-left: 12px;
+        }
+        #example_paginate{
+            margin-right: 12px;
+        }
+        #example_length{
+            margin-left: 12px;
+        }
+        .ui-state-hightlight{
+            border:1px dashed #ccc;
+         }
+        .modal-title{
+            color: green;
+            text-align: center;
+            text-transform: uppercase capitalize;
+            }
+        #spanproduct{
+            color:blue;
+            text-transform: uppercase;
+        }
+        #idcontent{
+            width: 250px;
+           /*  height: 70px; */
+        }
+        #spanuser{
+            color:blue;
+            text-transform: uppercase;
+        }
+        #idprd{
+            width: 100px;
+        }
+        #btndroplist{
+            margin-left: 100px;
+        }
+        #btndroplist2{
+            margin-left: 246px;
+        }
+        .ptable{
+                font-weight: bold;
+                height: 120px;
+                color: teal;
+		}
+        
+        
+    </style>
+
+
+
+</body>
+
+</html>

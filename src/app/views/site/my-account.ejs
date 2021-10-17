@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%-include("layout/head", {title: "Tất cả sản phẩm"})%>
+    </head>
+
+    <body>
+        <!-- Top bar Start -->
+        <%-include("layout/menu")%>
+        <!-- Bottom Bar End --> 
+        
+        <!-- Breadcrumb Start -->
+        <div class="breadcrumb-wrap">
+            <div class="container-fluid">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+            
+                    <li class="breadcrumb-item active">Tài khoản của tôi</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Breadcrumb End -->
+        
+        <!-- My Account Start -->
+        <div class="my-account">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
+                            <a class="nav-link active" id="dashboard-nav" data-toggle="pill" href="#dashboard-tab" role="tab"><i class="fa fa-tachometer-alt"></i>Thông tin chung</a>
+                            <a class="nav-link" id="orders-nav" data-toggle="pill" href="#orders-tab" role="tab"><i class="fa fa-shopping-bag"></i>Các đơn hàng</a>
+                            
+                            <a class="nav-link" id="account-nav" data-toggle="pill" href="#account-tab" role="tab"><i class="fa fa-user"></i>Thay đổi thông tin</a>
+                            <a class="nav-link" href="/logout"><i class="fa fa-sign-out-alt"></i>Đăng xuất</a>
+                        </div>
+                    </div>
+                    <div class="col-md-9">
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="dashboard-tab" role="tabpanel" aria-labelledby="dashboard-nav">
+                                <div class="col-md-12">
+                                    <% if(err){%>
+                                        <div class="alert alert-danger"><%=err%></div>
+                                    <% }%>
+                                    <h4 class="tttitle">Thông tin chung</h4>
+                                    <p><span class="ttuser">Họ và tên: </span><%=user.full_name%></p>
+                                    <p><span class="ttuser">Số điện thoại: </span><%=user.phone%></p>
+                                    <p><span class="ttuser">Địa chỉ: </span><%=user.address%></p>
+                                    <p><span class="ttuser">Email: </span><%=user.email%></p>
+                                    
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="orders-tab" role="tabpanel" aria-labelledby="orders-nav">
+                                <div class="table-responsive">
+                                    <table  class="table table-bordered">
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>TT</th>
+                                                <th>Mã hóa đơn</th>
+                                                <th>Ngày mua</th>
+                                                <th>Số lượng</th>
+                                                <th>Tổng tiền</th>
+                                                <th>Thanh toán</th>
+                                                <th>Trạng thái</th>
+                                                <th>Hành động</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% let count=1 %>
+                                            <% for(let order of orders){%>
+                                            <tr>
+                                                <td><%=count++ %></td>
+                                                <td id="idorder"><%=order.idorder %></td>
+                                                <td><%=order.createdAt.toLocaleDateString('vi-VN') %></td>
+                                                <td><%=order.totalprd %></td>
+                                                <td><%=new Intl.NumberFormat("vi-VN", {style: "currency", currency: "VND"}).format(order.totalprice) %></td>
+                                                <td>
+                                                    <%if(order.payment=="Đã thanh toán online"){%>
+                                                        Online
+                                                    <% }%> 
+                                                    <%if(order.payment=="Chưa thanh toán"){%>
+                                                       Chưa
+                                                    <%}%> 
+                                                    <%if(order.payment=="Đã thanh toán cod") {%>
+                                                       Cod
+                                                    <%}%>
+                                                </td>
+                                                <%if(order.status=="Tiếp nhận đơn hàng"){%>
+                                                    <td><span class="text-muted">Đơn hàng mới đặt</span></td>
+                                                <% }%> 
+                                                <%if(order.status=="Đã xác nhận đơn hàng"){%>
+                                                    <td><span class="text-primary">Đơn hàng đã được xác nhận</span></td>
+                                                <%}%> 
+                                                <%if(order.status=="Vận chuyển") {%>
+                                                    <td><span class="text-warning">Đang vận chuyển</span></td>
+                                                <%}%>
+                                                <%if(order.status=="Đã hoàn thành đơn hàng"){%>
+                                                    <td><span class="text-success">Đã hoàn thành đơn hàng</span></td>
+                                                <%}%> 
+                                                <%if(order.status=="Hủy đơn hàng") {%>
+                                                    <td><span class="text-danger">Hủy đơn hàng</span></td>
+                                                <%}%>
+                                               
+                                                <td><button class="btn2" data-id="<%=order.idorder%>" data-status="<%=order.status%>"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-binoculars-fill" viewBox="0 0 16 16">
+                                                    <path d="M4.5 1A1.5 1.5 0 0 0 3 2.5V3h4v-.5A1.5 1.5 0 0 0 5.5 1h-1zM7 4v1h2V4h4v.882a.5.5 0 0 0 .276.447l.895.447A1.5 1.5 0 0 1 15 7.118V13H9v-1.5a.5.5 0 0 1 .146-.354l.854-.853V9.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v.793l.854.853A.5.5 0 0 1 7 11.5V13H1V7.118a1.5 1.5 0 0 1 .83-1.342l.894-.447A.5.5 0 0 0 3 4.882V4h4zM1 14v.5A1.5 1.5 0 0 0 2.5 16h3A1.5 1.5 0 0 0 7 14.5V14H1zm8 0v.5a1.5 1.5 0 0 0 1.5 1.5h3a1.5 1.5 0 0 0 1.5-1.5V14H9zm4-11H9v-.5A1.5 1.5 0 0 1 10.5 1h1A1.5 1.5 0 0 1 13 2.5V3z"/>
+                                                  </svg></button></td>
+                                                 
+                                            </tr>
+                                            <% }%>  
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                           
+                        <form name="delete-form-danhmuc" method="post"></form>
+                           <!--  model detail -->
+                           <div class="modal" id="modalshow" role="dialog">
+                            <div class="modal-dialog modal-lg" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="modaltitle">Chi tiết đơn hàng</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+
+                                <div class="modal-body">
+                                </div>
+                                <div class="modal-footer">
+                                    
+                                    
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                            
+                            <div class="tab-pane fade" id="account-tab" role="tabpanel" aria-labelledby="account-nav">
+                                <h4 class="tttitle1">Thay đổi thông tin chung</h4>
+                                    <form action="/editif/<%=user._id%>" role="form" method="post">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label>Họ và Tên:</label>
+                                                <input class="form-control" name="full_name" required type="text" value="<%=user.full_name%>">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label>Số điện thoại (Nhập 10 số):</label>
+                                                <input class="form-control" name="phone" required type="text" pattern="[0-9]{10}" value="<%=user.phone%>">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label>Email:</label>
+                                                <input class="form-control" name="email" required type="email" value="<%=user.email%>"readonly>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label>Địa chỉ:</label>
+                                                <input class="form-control" name="address" required type="text" value="<%=user.address%>">
+                                            </div>
+                                            <div class="col-md-12">
+                                                <button  type="submit" class="btn1">Thay đổi thông tin</button>
+                                                <br><br>
+                                            </div>
+                                        </div>
+                                    </form>
+                                <h4 class="tttitle1">Thay đổi mật khẩu</h4>
+                                <form action="/editpass/<%=user._id%>" role="form" method="post">
+                                    <div class="row">
+                                        
+                                        <div class="col-md-12">
+                                            <input class="form-control"  name="password" pattern="^[a-zA-Z0-9]+$" required type="password" placeholder="Mật khẩu cũ" minlength="6">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input class="form-control" id="password" onkeyup='check();' name="newpass" pattern="^[a-zA-Z0-9]+$" required type="password" placeholder="Mật khẩu mới(ít nhất 6 ký tự)" minlength="6">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input class="form-control" id="confirm_password"  onkeyup='check();' name="new2pass" pattern="^[a-zA-Z0-9]+${6}" required type="password" placeholder="Xác nhận mật khẩu(ít nhất 6 ký tự)" minlength="6"><span id='message'></span>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <button type="submit" class="btn1">Thay đổi</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- My Account End -->
+        
+        <!-- Footer Start -->
+        <%-include("layout/footer")%>
+        <style>
+            .ttuser{
+                color: rgb(5, 90, 40);
+                font-weight: bold;
+                font-size: 120%;
+            }
+            .tttitle{
+                color: rgb(5, 90, 40);
+                font-weight: bold;
+                text-align: center;
+            }
+            .tttitle1{
+                color: rgb(5, 90, 40);
+                font-weight: bold;
+               
+            }
+            #btnexitdetail{
+                background-color: #FF6F61;
+                color: white;
+            }
+            .ptable{
+                font-weight: bold;
+                height: 120px;
+                color: teal;
+		    }
+            .pdetail{
+                margin-bottom: 5px;
+                color: black;
+            }
+            #modaltitle{
+                font-weight: bold;
+                text-align: center;
+            }
+            #btn-delete-form{
+                color: #FF6F61;
+                background: #ffffff;
+                border: 1px solid #FF6F61;
+                border-radius: 5px;
+            }
+            #btn-delete-form:hover,
+            #btn-delete-form:active
+            #btn-delete-form:focus {
+                color: #ffffff;
+                background: #FF6F61;
+                box-shadow: none;
+            }
+            #idorder{
+                width: 170px;
+            }
+            .btn1{
+                color: #FF6F61;
+                background: #ffffff;
+                border: 1px solid #FF6F61;
+                border-radius: 5px;
+            }
+            .btn1:hover,
+            .btn1:active
+            .btn1:focus {
+                color: #ffffff;
+                background: #FF6F61;
+                box-shadow: none;
+            }
+            
+            
+        </style>
+        <script type="text/javascript">
+            
+            $(document).ready(function(){
+                $('.btn2').click(function(){
+                    $('#modalshow').modal('show');
+                    var data = $(this).data('id');
+                    
+                    var status = $(this).data('status');
+                    if(status=="Tiếp nhận đơn hàng" ||status=="Đã xác nhận đơn hàng"){
+                        var $input = $('<input type="submit" class="deletebtn" id="btn-delete-form" value="Hủy đơn hàng"/>');
+                        $input.appendTo($(".modal-footer"));
+
+                        var formdele = document.forms['delete-form-danhmuc'];
+                        var btndele = document.getElementById('btn-delete-form');
+                        btndele.onclick = function(){
+                        formdele.action='/orderdelete/'+data;
+                        formdele.submit();
+                        
+                    }
+                        
+                    } 
+                    
+                })
+                
+                    
+                
+                
+            })
+            $(document).ready(function(){
+                $('#closemodal').click(function(){
+                    $('#modalshow').modal('hide');
+                    $(".deletebtn").remove();
+  
+                })
+                $('.close').click(function(){
+                    $('#modalshow').modal('hide');
+                    $(".deletebtn").remove();
+  
+                })
+            })
+            var check = function() {
+                if (document.getElementById('password').value ==
+                    document.getElementById('confirm_password').value) {
+                    document.getElementById('message').style.color = 'green';
+                    document.getElementById('message').innerHTML = 'chính xác';
+                } else {
+                    document.getElementById('message').style.color = 'red';
+                    document.getElementById('message').innerHTML = 'chưa chính xác';
+                    }
+                }
+           
+        </script>
+        <script>
+             $(document).ready(function(){
+                $('.btn2').click(function(){
+                    var data = $(this).data('id');
+                   
+                    
+                    $.ajax({
+                        type:"POST",
+                        url:"/orderdetail",
+                        data:{data:data},
+                        success:function(response){
+                            $('.modal-body').html(response);
+                            $('#modalshow').modal('show');
+
+                        },
+                        error:function(xhr,ajaxOptions, thrownError){
+                            alert("xay ra loi");
+                        }
+                       
+                    })
+                    
+                })
+            })
+        </script>
+        
+        
+    </body>
+</html>

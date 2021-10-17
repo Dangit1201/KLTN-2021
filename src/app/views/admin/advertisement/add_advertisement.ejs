@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<%- include('../layout/head.ejs', {title: "Thêm quảng cáo" })%>
+
+</head>
+
+<body>
+	<%- include('../layout/header.ejs') %>
+	<!-- /.container-fluid -->
+		
+	<%- include('../layout/sidebar.ejs') %>
+	<!--/.sidebar-->
+		
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+		<div class="row">
+			<ol class="breadcrumb">
+                <li><a href="/admin"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
+                <li><a href="">Quản lý quảng cáo</a></li>
+				<li class="active">Thêm quảng cáo</li>
+			</ol>
+		</div><!--/.row-->
+		
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header">Thêm quảng cáo</h1>
+			</div>
+        </div><!--/.row-->
+        <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="col-md-8">
+                                <form action="/admin/advertisements/store" role="form" method="post" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label>Ảnh sản phẩm</label>
+                                    <input required name="thumbnail" type="file">
+                                    <br>
+                                    <div>
+                                        <img src="img/download.jpeg">
+                                </div>
+                                <div class="form-group">
+                                    <label>Nội dung</label>
+                                    <input name="content" type="text" class="form-control" placeholder="">
+                                </div>
+                                <div class="form-group">
+                                    <label>Link quảng cáo</label>
+                                    <input name="link"  type="text" class="form-control">
+                                </div>                       
+                                
+                                <div class="form-group">
+                                    <label>Loại quảng cáo</label>
+                                    <select name="typeofadv" class="form-control">
+                                        <option value="slider">Slider</option>
+                                        <option value="banner">Banner</option>
+                                    </select>
+                                </div>
+                                <button name="sbm" type="submit" class="btn btn-success">Thêm mới</button>
+                                <button id="btn-exit" type="reset" class="btn btn-default">Thoát</button>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+                </div><!-- /.col-->
+            </div><!-- /.row -->
+			<%- include('../layout/footer.ejs')%>
+            <script>
+                $('#btn-exit').click(function() {
+                window.location.href = '/admin/categories';
+                return false;
+                });
+            </script>
+		
+	</div>	<!--/.main-->	
+</body>
+
+</html>

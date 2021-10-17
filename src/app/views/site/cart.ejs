@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%-include("layout/head", {title: "Trang Chủ"})%>
+    </head>
+
+    <body>
+        <!-- Top bar Start -->
+        <%-include("layout/menu")%>
+        <!-- Bottom Bar End -->
+        
+        <!-- Breadcrumb Start -->
+        <div class="breadcrumb-wrap">
+            <div class="container-fluid">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                    
+                    <li class="breadcrumb-item active">Giỏ hàng</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Breadcrumb End -->
+       
+        <!-- Cart Start -->
+        <% if(totalCartItems==0){%>
+            <div class="login">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-10 mx-auto">   
+                        <form action="/login" role="form" method="get" ></form> 
+                            <div class="register-form">
+                                <div class="row">
+                                    
+                                    
+                                    <div class="col-md-12 text-center">
+                                        <img src="/static/site/img/shopping-cart.png" alt="sussces" width="150" height="150" >
+                                    </div>
+                                    
+                                   
+                                    <div id="label" class="col-md-12 text-center">
+                                        <label >Không có sản phẩm nào trong giỏ hàng.</label>
+                                    </div>
+                                    <hr>
+                                    <div id="btn-register" class="col-md-12 text-center">
+                                        <button id="btnexit" class="btn">Về trang chủ!</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div> 
+        <% } else {%>
+        <div class="cart-page">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="cart-page-inner">
+                            <div class="table-responsive">
+                        <form  id="update-cart" method="post" action="/update-cart">
+                            <% if(totalCartItems!=0){%>
+                                <table class="table table-bordered">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Giá</th>
+                                            <th>Màu</th>
+                                            <th>Số lượng</th>
+                                            <th>Thành tiền</th>
+                                            <th>Xóa</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="align-middle">
+                                        <% for(let product of products){%>
+                                        <% totalPrice += product.qty * product.price%>
+                                        <% totalprd += product.qty %>
+                                    
+                                        <tr>
+                                            <td>
+                                                
+                                                <div class="img">
+                                                    <img src="/static/images/<%=product.img%>">
+                                                    <p><%=product.name%></p>
+                                                </div>
+                                            </td>
+                                            <td><%=product.price.toLocaleString('vi-VN')%>đ%></td>
+                                            <td><%=product.color%>
+                                            <input type="hidden" name="color" value=<%=product.color%>>
+                                            <input type="hidden" name="id" value=<%=product.id%>>
+                                            </td>
+                                            <td>
+                                                <div class="qty">
+                                                    <button onclick="clickmul()" id="btnmul" type="submit" class="btn-minus" ><i class="fa fa-minus"></i></button>
+                                                    <input name="products[<%=product.color%>][<%=product.id%>]" id="inputprice" class="inputprd" type="text"  value=<%=product.qty%> readonly="true" >
+                                                    <button  onclick="clickplus()" id="btnadd" type="submit" class="btn-plus" ><i class="fa fa-plus" ></i></button>
+                                                </div>
+                                            </td>
+                                            <td><%=(product.qty*product.price).toLocaleString('vi-VN')%>đ%></td>
+                                            <td><a href="/del-cart-<%=product.id%>" class="btn"><i class="fa fa-trash"></i></a></td>
+                                        </tr>
+                                        <% }%>
+                                        
+                                    </tbody>
+                                </table>
+                            <% }%>
+                        </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="cart-page-inner">
+                            <div class="row">
+                                
+                                <div class="col-md-12">
+                                    <div class="cart-summary">
+                                        <% if(err){%>
+                                        <p class="errprd"><%=err%></p>
+                                        <% }%>
+                                        <div class="cart-content">
+                                            <h1>Tóm tắt giỏ hàng</h1>
+                                            <p>Tổng số lượng:<span><%=totalprd%> sản phẩm</span></p>
+                                            <p>Phí ship:<span>Miễn phí</span></p>
+                                            <h2>Tổng tiền<span><%=totalPrice.toLocaleString('vi-VN')%>đ%></span></h2>
+                                        </div>
+                                  
+                                        <div  class="cart-btn" id="cart-btn">
+                                            <button onclick="window.location.href='/checkout'" id="cart-btn-ckecout">Thanh toán</button>
+                                        </div>
+                                    
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <%}%>
+        <!-- Cart End -->
+        
+        <!-- Footer Start -->
+        <%-include("layout/footer")%>
+        <script> 
+            /* $(document).ready(function(){
+                $('#update-cart').on('submit',function(event){
+                    event.preventDefault();
+                    const personData = $(this).serialize();
+                    console.log(personData);
+
+                    $ajax({
+                        url:'/update-cart',
+                        method:'post',
+                        data:personData,
+                        success: function(result,status,xhr){
+                            console.log('ok');
+                        },
+                        error:function(result,status,xhr){
+                            console.log('no');
+                        },
+                    })
+                    
+                })
+            }); */
+           /*  $(function(){
+               
+                var dem = $('input.inputprd').length;
+             console.log(dem); 
+                
+                for(var i = 0; i < dem; i++){
+                    var inputVal = $('#inputprice').val();
+                    console.log($('#inputprice').val());
+                    if(inputVal==1){
+                    $('#btnmul').attr({
+                        'disabled': 'true',
+                        'style': 'background-color:rgb(120, 120, 120)'
+                    });
+                    
+                }
+            }
+                
+            }); */
+            /* var total = document.querySelectorAll('.inputprd');
+            var i;
+            var plus=document.querySelectorAll('.btn-minus');
+            var id = document.getElementsByClassName("inputprd");
+            console.log(total.length);
+            
+            function clickplus(){
+           
+                for (i = 0; i <= total.length; i++) {
+                    console.log(id[0].value);
+                    console.log(id[1].value);
+                    console.log(id[2].value);
+                    if (id[i].value > 1) {
+                    plus[i].disabled = false;
+                    plus[i].style = "background-color:#FF6F61";
+                }  
+            }
+            };
+
+            function clickmul() {
+            
+                for (i = 0; i <= total.length; i++) {
+                    if (id[i].value =='1' ) {
+                    plus[i].disabled = true;
+                    plus[i].style = "background-color:rgb(120, 120, 120)";
+                } 
+            }
+            }; */
+            
+                 
+         </script>
+         <script>
+            $('#btn-register').click(function() {
+            window.location.href = '/';
+            return false;
+            });
+        </script>
+         <style>
+             #cart-btn{
+                text-align: center;
+             }
+             #cart-btn-ckecout{
+                width: 100%;
+             }
+             #wrapper{
+                margin-top: 30px;
+                text-align: center;
+                background-color: white;
+                margin-bottom: 30px;
+                
+             }
+             #aimg{
+               padding-top: 15px;
+               padding-bottom: 10px;
+             }
+             #diva{
+                border: 1px solid #FF6F61;
+                padding-bottom: 1px;
+                margin-bottom: 1px;
+                width: 200px;
+                text-align: center;
+                
+             }
+             /* .aadmin{
+                width: 50px;
+               
+             } */
+             .padmin{
+                margin-bottom: 1px;
+                text-align: center;
+                font-weight: bold;
+             }
+             #diva .mx-auto{
+                 margin-bottom: 50px;
+             }
+             .errprd{
+                 color:red;
+             }
+             #label{
+                 margin-top: 15px;
+                 margin-bottom: 10px;
+             }
+             #btnexit{
+                 width: 450px;
+             }
+           
+         </style>
+    </body>
+</html>

@@ -1,0 +1,54 @@
+<div class="col-lg-4 sidebar">
+    <div class="sidebar-widget category">
+        <h2 class="title">Danh mục sản phẩm</h2>
+        <nav class="navbar bg-light">
+            <ul class="navbar-nav">
+                <% for(let category of categoriesshare){%>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/category-<%=category.slug%>.<%=category.id%>"><i class="fa fa-mobile-alt"></i><%=category.title%></a>
+                    </li>
+                    <% }%>
+            </ul>
+        </nav>
+    </div>
+    
+    <div class="sidebar-widget widget-slider">
+        <h2 class="title">Sản phẩm nổi bật</h2>
+        <div class="sidebar-slider normal-slider">
+            
+            <% for(let product of FeaturedProductsshare){%>
+                <%- include("../components/product-item", {product:product})%>    
+            <% }%>
+        
+        </div>
+    </div>
+    
+    <div class="sidebar-widget brands">
+        <h2 class="title">Nhãn hiệu</h2>
+        <ul>
+            <li><a href="/category-iphone.60c9c913dbf8b12ff844ef53">Iphone </a><span>(23)</span></li>
+            <li><a href="/category-sam-sung.60c9bf2371da2f2f207dbc00">Sam sung </a><span>(17)</span></li>
+            <li><a href="/category-realme.60cbfa712a157f2e04e50019">Realme </a><span>(8)</span></li>
+            <li><a href="/category-oppo.60c9c6b69c4fba061484d525">Oppo</a><span>(15)</span></li>
+            <li><a href="/category-vsmart.60cbfafd2a157f2e04e5001b">Vsmart </a><span>(6)</span></li>
+            <li><a >Htc</a><span>(8)</span></li>
+        </ul>
+    </div>
+    
+    <div class="sidebar-widget tag">
+        <h2 class="title">Thẻ tag</h2>
+        <a href="/product-iphone-12-256gb.60d9e6b5b26a2e1f68e816f4">iphone12promax</a>
+        <a >samsung</a>
+        <a >samsunga31</a>
+        <a >realmegtneo</a>
+        <a >opporeno5</a>
+        <a >redmik40</a>
+        <a >giare</a>
+        <a >iphonex</a>
+        <a >noibat</a>
+      
+    </div>
+    
+    
+    
+</div>

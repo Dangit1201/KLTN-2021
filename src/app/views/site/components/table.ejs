@@ -1,0 +1,34 @@
+<div id="myTable" class="row">
+    <% for(let product of products){%>
+        <div class="col-md-4">
+            <div class="product-item">
+                <div class="product-title">
+                    <a href="/product-<%=product.slug%>.<%=product._id%>"><%=product.name%></a>
+                    <div class="ratting">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                </div>
+                <div class="product-image">
+                    <a href="/product-<%=product.slug%>.<%=product._id%>">
+                        <img src="/static/images/<%=product.thumbnail%>" alt="Product Image">
+                    </a>
+                    <div class="product-action">
+                        <a href="#"><i class="fa fa-cart-plus"></i></a>
+                       
+                        <a href="/product-<%=product.slug%>.<%=product._id%>"><i class="fa fa-search"></i></a>
+                    </div>
+                </div>
+                <div class="product-price">
+                    <h3><span><%=product.price.toLocaleString('vi-VN')%>đ</span></h3>
+                    <a class="btn" href="/product-<%=product.slug%>.<%=product._id%>"><i class="fa fa-shopping-cart"></i>Buy Now</a>
+                </div>
+            </div>
+        </div>
+    <% }%>  
+</div>
+
+

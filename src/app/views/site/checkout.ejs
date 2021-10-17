@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%-include("layout/head", {title: "Tất cả sản phẩm"})%>
+    </head>
+
+    <body>
+        <!-- Top bar Start -->
+        <%-include("layout/menu")%>
+        <!-- Bottom Bar End --> 
+        
+        <!-- Breadcrumb Start -->
+        <div class="breadcrumb-wrap">
+            <div class="container-fluid">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="/cart">Giỏ hàng</a></li>
+                    <li class="breadcrumb-item active">Thanh toán</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Breadcrumb End -->
+        
+        <!-- Checkout Start -->
+        <div class="checkout">
+            <div class="container-fluid"> 
+            <form action="/checkout"role="form" method="post">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="checkout-inner">
+                            <div class="billing-address">
+                                <h2>Địa chỉ nhận hàng</h2>
+                                <div class="row">
+                                    <%for(x in user){%>
+                                    <div class="col-md-12">
+                                        <label>Họ và tên:</label>
+                                        <input class="form-control" name="full_name" type="text" required value="<%=user[x].full_name%>">
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label>E-mail:</label>
+                                        <input class="form-control" name="email" type="text" required value="<%=user[x].email%>">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label>Số điện thoại:</label>
+                                        <input class="form-control" name="phone" type="text" required value="<%=user[x].phone%>">
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label>Địa chỉ:</label>
+                                        <input class="form-control" name="address" type="text" required value="<%=user[x].address%>">
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label>Ghi chú thêm:</label>
+                                        <textarea  name="note" class="form-control" rows="4"></textarea>
+                                      
+                                    </div>
+                                    <%}%>
+                                    <input type="hidden" name="totalprd" value=<%=totalprd%>>
+                                    <input type="hidden" name="totalPrice" value=<%=totalPrice%>>
+                                   
+                                </div>
+                            </div>
+
+                           
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="checkout-inner">
+                            <div class="checkout-summary">
+                                <h1>Tóm tắt giỏ hàng</h1>
+                                <p>Tổng số lượng:<span><%=totalprd%> sản phẩm</span></p>
+                                <p>Phí ship:<span>Miễn phí</span></p>
+                                <h2>Tổng tiền<span><%=totalPrice.toLocaleString('vi-VN')%>đ</span></h2>
+                            </div>
+
+                            <div class="checkout-payment">
+                                <div class="payment-methods">
+                                    <h1>Hình thức thanh toán</h1>
+                                    <div class="payment-method">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" checked="checked" name="pay" class="custom-control-input" id="payment-1" name="payment" value="0">
+                                            <label class="custom-control-label" for="payment-1">Thanh toán khi nhận hàng(cod)</label>
+                                        </div>
+                                        <div class="payment-content" id="payment-1-show">
+                                            <p>
+                                                Khách hàng sẽ thanh toán tiền sau khi nhận được hàng.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="payment-method">
+                                        <div class="custom-control custom-radio">
+                                            <input type="radio" name="pay" class="custom-control-input" id="payment-2" name="payment" value="1">
+                                            <label class="custom-control-label" for="payment-2">Thanh toán online qua vnpay</label>
+                                        </div>
+                                        <div class="payment-content" id="payment-2-show">
+                                            <p>
+                                               Thanh toán bằng chuyển khoản ngân hàng.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    
+                                   
+                                   
+                                   
+                                </div>
+                                <% if(totalCartItems==0){%>
+                                    <div></div>
+                                <% } else {%>
+                                    <div class="checkout-btn">
+                                        <button>Đặt hàng</button>
+                                    </div>
+                                <% }%>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </div>
+        <!-- Checkout End -->
+        
+        <!-- Footer Start -->
+        <%-include("layout/footer")%>
+    </body>
+</html>

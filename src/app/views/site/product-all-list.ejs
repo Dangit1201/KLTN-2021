@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%-include("layout/head", {title: "Tất cả sản phẩm"})%>
+    </head>
+
+    <body>
+        <!-- Top bar Start -->
+        <%-include("layout/menu")%>
+        <!-- Bottom Bar End -->  
+        
+        <!-- Breadcrumb Start -->
+        <div class="breadcrumb-wrap">
+            <div class="container-fluid">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a >Tất cả sản phẩm</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- Breadcrumb End -->
+        
+        <!-- Product List Start -->
+        <div class="product-view">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="product-view-top">
+                                    <div class="row">
+                                        
+                                        
+                                        <div class="col-md-4">
+                                            <div class="product-price-range">
+                                                <div class="dropdown">
+                                                    <% if(sort==null){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">Tìm theo giá điện thoại</div>
+                                                    <% }%>
+                                                    <% if(sort=='14'){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">1tr đến 4tr</div>
+                                                    <% }%>
+                                                    <% if(sort=='48'){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">4tr đến 8tr</div>
+                                                    <% }%>
+                                                    <% if(sort=='815'){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">8tr đến 15tr</div>
+                                                    <% }%>
+                                                    <% if(sort=='1522'){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">15 tr đến 22tr</div>
+                                                    <% }%>
+                                                    <% if(sort=='gte22'){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">trên 22 tr</div>
+                                                    <% }%>
+                                                   
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a href="/category" class="dropdown-item">Mọi giá</a>
+                                                        <a href="/category?sort=14" class="dropdown-item">1tr đến 4tr</a>
+                                                        <a href="/category?sort=48" class="dropdown-item">4tr đến 8tr</a>
+                                                        <a href="/category?sort=815" class="dropdown-item">8tr đến 15tr</a>
+                                                        <a href="/category?sort=1522" class="dropdown-item">15tr đến 22tr</a>
+                                                        <a href="/category?sort=gte22" class="dropdown-item">trên 22 tr</a>
+                                                      
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="product-short">
+                                                <div class="dropdown">
+                                                    <% if(ram==null){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">Tìm theo ram</div>
+                                                    <% }%>
+                                                    <% if(ram==1){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">1 GB</div>
+                                                    <% }%>
+                                                    <% if(ram==2){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">2 GB</div>
+                                                    <% }%>
+                                                    <% if(ram==3){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">3 GB</div>
+                                                    <% }%>
+                                                    <% if(ram==4){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">4 GB</div>
+                                                    <% }%>
+                                                    <% if(ram==6){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">6 GB</div>
+                                                    <% }%>
+                                                    <% if(ram==8){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">8 GB</div>
+                                                    <% }%>
+                                                    <% if(ram==12){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">12 GB</div>
+                                                    <% }%>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a href="/category" class="dropdown-item">Tất cả</a>
+                                                        <a href="/category?ram=1" class="dropdown-item">1 GB</a>
+                                                        <a href="/category?ram=2" class="dropdown-item">2 GB</a>
+                                                        <a href="/category?ram=3" class="dropdown-item">3 GB</a>
+                                                        <a href="/category?ram=4" class="dropdown-item">4 GB</a>
+                                                        <a href="/category?ram=6" class="dropdown-item">6 GB</a>
+                                                        <a href="/category?ram=8" class="dropdown-item">8 GB</a>
+                                                        <a href="/category?ram=12" class="dropdown-item">12 GB</a>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="product-short">
+                                                <div class="dropdown">
+                                                    <% if(memory==null){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">Tìm theo bộ nhớ</div>
+                                                    <% }%>
+                                                    <% if(memory==16){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">16 GB</div>
+                                                    <% }%>
+                                                    <% if(memory==32){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">32 GB</div>
+                                                    <% }%>
+                                                    <% if(memory==64){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">64 GB</div>
+                                                    <% }%>
+                                                    <% if(memory==128){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">128 GB</div>
+                                                    <% }%>
+                                                    <% if(memory==256){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">256 GB</div>
+                                                    <% }%>
+                                                    <% if(memory==512){%>
+                                                        <div class="dropdown-toggle" data-toggle="dropdown">512 GB</div>
+                                                    <% }%>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a href="/category" class="dropdown-item">Tất cả</a>
+                                                        <a href="/category?memory=16" class="dropdown-item">16 GB</a>
+                                                        <a href="/category?memory=32" class="dropdown-item">32 Gb</a>
+                                                        <a href="/category?memory=64" class="dropdown-item">64 GB</a>
+                                                        <a href="/category?memory=128" class="dropdown-item">128 GB</a>
+                                                        <a href="/category?memory=256" class="dropdown-item">256 GB</a>
+                                                        <a href="/category?memory=512" class="dropdown-item">512 GB</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="tabletoreplace"class="col-md-12">
+                                <div id="myTable" class="row">
+                                    <% for(let product of products){%>
+                                        <div id="div-phone" class="col-md-4">
+                                            <div class="product-item">
+                                                <div class="product-title">
+                                                    <a href="/product-<%=product.slug%>.<%=product._id%>"><%=product.name%></a>
+                                                    <div class="ratting">
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="product-image">
+                                                    <a href="/product-<%=product.slug%>.<%=product._id%>">
+                                                        <img src="/static/images/<%=product.thumbnail%>" alt="Product Image">
+                                                    </a>
+                                                    <div class="product-action">
+                                                      
+                                                       
+                                                        <!-- <a href="/product-<%=product.slug%>.<%=product._id%>"><i class="fa fa-search"></i></a> -->
+                                                    </div>
+                                                </div>
+                                                <div class="product-price">
+                                                    <h3><span><%=product.price.toLocaleString('vi-VN')%>đ</span></h3>
+                                                    <a class="btn" href="/product-<%=product.slug%>.<%=product._id%>"><i class="fa fa-shopping-cart"></i>Mua ngay</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% }%>  
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+                        
+                        <!-- Pagination Start -->
+                        <div id="pagisort" class="col-md-12">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center">
+                        
+                                       
+
+                                        <%if(memory){%>
+                                            <%if(page>1){%>
+                                                <li class="page-item"><a class="page-link"
+                                                        href="/category?memory=<%=memory%>&page=<%= page-1%>">&laquo;</a>
+                                                </li>
+                                                <%}%>
+                                                    <%for(x in pages){%>
+                                                        <%if(pages[x]!=='...'){%>
+                                                            <li class="page-item <%=pages[x]===page ? 'active':''%>"><a
+                                                                    class="page-link"
+                                                                    href="/category?memory=<%=memory%>&page=<%= pages[x]%>">
+                                                                    <%=pages[x]%>
+                                                                </a></li>
+                                                            <%} else {%>
+                                                                <li class="page-item"><a class="page-link"
+                                                                        onclick="return false"
+                                                                        href="/category?memory=<%=memory%>&page=<%= pages[x]%>">
+                                                                        <%=pages[x]%>
+                                                                    </a></li>
+                                                                <%}%>
+                                                                    <%}%>
+                                                                        <%if(page<totalPage){%>
+                                                                            <li class="page-item"><a class="page-link"
+                                                                                    href="/category?memory=<%=memory%>&page=<%= page+1%>">&raquo;</a>
+                                                                            </li>
+                                                                            <%}%>  
+                                        <%} else if(ram){%>
+                                            <%if(page>1){%>
+                                                <li class="page-item"><a class="page-link"
+                                                        href="/category?ram=<%=ram%>&page=<%= page-1%>">&laquo;</a>
+                                                </li>
+                                                <%}%>
+                                                    <%for(x in pages){%>
+                                                        <%if(pages[x]!=='...'){%>
+                                                            <li class="page-item <%=pages[x]===page ? 'active':''%>"><a
+                                                                    class="page-link"
+                                                                    href="/category?ram=<%=ram%>&page=<%= pages[x]%>">
+                                                                    <%=pages[x]%>
+                                                                </a></li>
+                                                            <%} else {%>
+                                                                <li class="page-item"><a class="page-link"
+                                                                        onclick="return false"
+                                                                        href="/category?ram=<%=ram%>&page=<%= pages[x]%>">
+                                                                        <%=pages[x]%>
+                                                                    </a></li>
+                                                                <%}%>
+                                                                    <%}%>
+                                                                        <%if(page<totalPage){%>
+                                                                            <li class="page-item"><a class="page-link"
+                                                                                    href="/category?ram=<%=ram%>&page=<%= page+1%>">&raquo;</a>
+                                                                            </li>
+                                                                            <%}%>  
+                                        <%} else {%>
+                                            <%if(page>1){%>
+                                                <li class="page-item"><a class="page-link"
+                                                        href="/category?sort=<%=sort%>&page=<%= page-1%>">&laquo;</a>
+                                                </li>
+                                                <%}%>
+                                                    <%for(x in pages){%>
+                                                        <%if(pages[x]!=='...'){%>
+                                                            <li class="page-item <%=pages[x]===page ? 'active':''%>"><a
+                                                                    class="page-link"
+                                                                    href="/category?sort=<%=sort%>&page=<%= pages[x]%>">
+                                                                    <%=pages[x]%>
+                                                                </a></li>
+                                                            <%} else {%>
+                                                                <li class="page-item"><a class="page-link"
+                                                                        onclick="return false"
+                                                                        href="/category?sort=<%=sort%>&page=<%= pages[x]%>">
+                                                                        <%=pages[x]%>
+                                                                    </a></li>
+                                                                <%}%>
+                                                                    <%}%>
+                                                                        <%if(page<totalPage){%>
+                                                                            <li class="page-item"><a class="page-link"
+                                                                                    href="/category?sort=<%=sort%>&page=<%= page+1%>">&raquo;</a>
+                                                                            </li>
+                                                                            <%}%>
+                                        <%}%>
+                                       
+                                </ul>
+                            </nav>
+                        </div>
+
+                      
+                        <!-- Pagination Start -->
+                    </div>           
+                    
+                    <!-- Side Bar Start -->
+                    <%-include("layout/sidebar")%>
+                    <!-- Side Bar End -->
+                </div>
+            </div>
+        </div>
+        <!-- Product List End -->  
+        
+        <!-- Brand Start -->
+        <div class="brand">
+            <div class="container-fluid">
+                <div class="brand-slider">
+                    <% for(let x of advertisementsshare){%>
+                    <div class="brand-item"><img src="/static/images/<%=x.thumbnail%>" alt=""></div>
+                    <% }%>
+                </div>
+            </div>
+           
+        </div>
+        <!-- Brand End -->
+        
+        <!-- Footer Start -->
+        <%-include("layout/footer")%>
+        <script> 
+            document.addEventListener('DOMContentLoaded',function(){
+               $(document).on("keyup","#myInput",function(){
+                    var data = $(this).val();
+                    console.log("du lieu tai client khi nhap:"+data);
+                    $.ajax({
+                        async:false,
+                        type:"POST",
+                        url:"/searchallcat",
+                        contentType:"application/x-www-form-urlencoded",
+                        dataType:"html",
+                        data:{data:data},
+                        success:function(response){
+                            $("#myTable").replaceWith(response);
+                        },
+                        error:function(xhr,ajaxOptions, thrownError){
+                            alert("xay ra loi");
+                        }
+                    });
+               });
+        
+               
+            })
+        </script>
+        <style>
+            #div-phone{
+                padding-right: 1px;
+            }
+        </style>
+
+        
+    </body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%-include("../layout/head", {title: "Trang Chủ"})%>
+    </head>
+
+    <body>
+        <!-- Top bar Start -->
+        <%-include("../layout/menu")%>
+        <!-- Bottom Bar End --> 
+        
+        <!-- Breadcrumb Start -->
+        <div class="breadcrumb-wrap">
+            <div class="container-fluid">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Đăng ký</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Breadcrumb End -->
+        
+        <!-- Login Start -->
+        <div class="login">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6 mx-auto">   
+                    <form action="/register" role="form" method="post" > 
+                        <div class="register-form">
+                            <div class="row">
+                                
+                                <legend class="text-center"><b>Đăng ký</b></legend>
+                                <% if(data && data.error){%>
+                                    <div class="col-md-12 alert alert-danger"><%=data.error%></div>
+                                <% }%>
+                                <div class="col-md-12">
+                                    <label>Họ và tên</label>
+                                    <input class="form-control" name="full_name" required type="text" placeholder="Họ và tên">
+                                </div>
+                                <div class="col-md-12">
+                                    <label>E-mail</label>
+                                    <input class="form-control" name="email" required type="email" placeholder="Email">
+                                </div>
+                                
+                                <div class="col-md-12">
+                                    <label>Địa chỉ</label>
+                                    <input class="form-control" required name="address" type="text" placeholder="Địa chỉ">
+                                </div>
+                                <div class="col-md-12">
+                                    <label>Số điện thoại</label>
+                                    <input class="form-control" required name="phone" type="tel" placeholder="Số điện thoại gồm 10 số" pattern="[0-9]{10}">
+                                </div>
+                                <div class="col-md-12">
+                                    <label>Mật khẩu</label>
+                                    <input pattern="^[a-zA-Z0-9]+$" required class="form-control" name="pass" type="text" placeholder="Phải nhập ít nhất 6 ký tự" minlength="6">
+                                </div>
+                                <div id="btn-register" class="col-md-12 text-center">
+                                    <button class="btn">Đăng ký</button>
+                                </div>
+
+                               
+                                
+                               
+                               
+                                
+                               
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+        <!-- Login End -->
+        
+        <style>
+            #btn-register{
+                margin-bottom: 15px;
+            }
+        </style>
+        <!-- Footer Start -->
+        <%-include("../layout/footer")%>
+    </body>
+</html>

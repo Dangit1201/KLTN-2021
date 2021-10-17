@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <%- include('../layout/head.ejs', {title: "Thống kê sản phẩm sắp hết hàng" })%>
+
+</head>
+
+<body>
+    <%- include('../layout/header.ejs') %>
+		
+	<%- include('../layout/sidebar.ejs') %><!--/.sidebar-->
+		
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+		<div class="row">
+			<ol class="breadcrumb">
+				<li><a href="/admin"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
+				<li class="active">Thống kê sản phẩm</li>
+			</ol>
+		</div><!--/.row-->
+		
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header">Danh sách sản phẩm sắp hết hàng</h1>
+			</div>
+		</div><!--/.row-->
+		<div id="toolbar" class="btn-group">
+            <p><span id="totalprd">Số sản phẩm sắp hết hàng: </span><%=products.length%>(sản phẩm)</p>
+
+        </div>
+
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-body">
+                        <table id="example"
+                            data-toolbar="#toolbar"
+                            data-toggle="table">
+
+						    <thead>
+						    <tr>
+                                <th>ID</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Danh mục</th>
+                                <th>Giá</th>
+                                <th>Ảnh sản phẩm</th>
+                                <th>Số lượng</th>
+                              
+                                
+						    </tr>
+                            </thead>
+                            <tbody id="divpagination">
+                                <% let count=1 %>
+                                <%for(x in products){%>
+                                <tr>
+                                    <td><%=count++ %></td>
+                                    <td><%=products[x].name%></td>
+                                    <td><%=products[x].cat_id.title%></td>
+                                    <td ><%=products[x].price.toLocaleString('vi-VN')%> vnd</td>
+                                    <td style="text-align: center"><img width="80" height="80"
+                                            src="/static/images/<%=products[x].thumbnail%>" /></td>
+                                                                                
+                                    <td ><%=products[x].quantity%></td>
+                                </tr>
+                                <%}%>
+                                
+                            </tbody>
+						</table>
+                    </div>
+
+                    
+                   
+				</div>
+			</div>
+		</div><!--/.row-->	
+	</div>	<!--/.main-->
+
+	<%- include('../layout/footer.ejs')%>
+    
+    <script>
+        $(document).ready(function() {
+        $('#example').DataTable({
+            "language": {
+            "lengthMenu": "Hiện _MENU_ sản phẩm",
+            "zeroRecords": "Không tìm kiếm ",
+            "info": "Trang _PAGE_ của _PAGES_",
+            "infoEmpty": "Không có sản phẩm nào",
+            "infoFiltered": "(Lọc từ _MAX_ sản phẩm)"
+        }
+        });
+        } );
+    </script>
+    <style>
+        .dataTables_length{
+            margin-top: 12px;
+        }
+        #example_filter{
+            margin-top: 12px;
+            margin-right: 12px;
+        }
+        th ,td{
+		            text-align: center;
+	    }
+        #example_info{
+            margin-left: 12px;
+        }
+        #example_paginate{
+            margin-right: 12px;
+        }
+        #example_length{
+            margin-left: 12px;
+        }
+        #totalprd{
+            font-weight: bold;
+            color: teal;
+        }
+        
+        
+    </style>
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <%- include("../layout/head", {title: "Sửa Sản Phẩm" })%>
+
+</head>
+
+<body>
+    <%- include("../layout/header")%>
+    <%- include("../layout/sidebar")%>
+		
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+		<div class="row">
+			<ol class="breadcrumb">
+                <li><a href="/admin"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
+                <li><a href="/admin/products">Quản lý sản phẩm</a></li>
+				<li class="active">Sửa sản phẩm</li>
+			</ol>
+		</div><!--/.row-->
+		
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header">Sản phẩm: <%=product.name%></h1>
+			</div>
+        </div><!--/.row-->
+        <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="col-md-6">
+                                <form action="/admin/products/update/<%=product._id%>" role="form" method="post" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label>Tên sản phẩm</label>
+                                    <input type="text" name="name" required class="form-control" value="<%=product.name%>"  placeholder="">
+                                </div>
+                                                                
+                                <div class="form-group">
+                                    <label>Giá bán sản phẩm</label>
+                                    <input type="number" name="price" required value=<%=product.price%> class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>Giá nhập sản phẩm</label>
+                                    <input type="number" name="importprice" required value=<%=product.importprice%> class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>Bộ nhớ</label>
+                                    <input required name="memory" type="number" class="form-control" value=<%=product.memory%> >
+                                </div>
+                                <div class="form-group">
+                                    <label>Ram</label>
+                                    <input required name="ram" type="number" class="form-control" value=<%=product.ram%> >
+                                </div>
+                                <div class="form-group">
+                                    <label>Bảo hành</label>
+                                    <input type="text" name="warranty" required value="<%=product.warranty%>" class="form-control">
+                                </div>    
+                                <div class="form-group">
+                                    <label>Phụ kiện</label>
+                                    <input type="text" name="accessories" required value="<%=product.accessories%>" class="form-control">
+                                </div>                  
+                                <div class="form-group">
+                                    <label>Khuyến mãi</label>
+                                    <input type="text" name="promotion" required value="<%=product.promotion%>" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>Màu sắc</label>
+                                    <div class="checkbox options">
+                                        <label class="while"><input <% if(product.color_id.while){%>checked<%}%> name="while" type="checkbox" value="on" > trắng</label>
+                                        <label class="black"><input <% if(product.color_id.black){%>checked<%}%> name="black" type="checkbox" value="on" > đen</label>
+                                        <label class="yellow"><input <% if(product.color_id.yellow){%>checked<%}%> name="yellow" type="checkbox" value="on" > vàng</label>
+                                        <label class="blue"><input <% if(product.color_id.blue){%>checked<%}%> name="blue" type="checkbox" value="on" > xanh</label>
+                                        <label class="red"><input <% if(product.color_id.red){%>checked<%}%> name="red" type="checkbox" value="on" > đỏ</label>
+                                        
+                                    </div>
+                                </div>    
+                                <div class="form-group">
+                                    <label>Thêm số lượng(hiện có:<%=product.quantity%>)</label>
+                                    <input type="number" name="quantity"  value="" type="text" class="form-control" placeholder="Nhập thêm số lượng">
+                                </div>  
+                                
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Ảnh sản phẩm</label>
+                                    <input type="file" name="thumbnail" />
+                                    <br>
+                                    <div>
+                                        <img width="130" height="130" src="/static/images/<%=product.thumbnail%>">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Danh mục</label>
+                                    <select name="cat_id" class="form-control">
+                                        <%
+                                        for(x in categories){
+                                        %>
+                                        <option <% if(product.cat_id == categories[x].id){%>selected<% }%> value=<%=categories[x]._id%>><%=categories[x].title%></option>
+                                        <%
+                                        }
+                                        %>
+                                    </select>
+                                </div>
+                                
+                                
+                                
+                                <div class="form-group">
+                                    <label>Sản phẩm nổi bật</label>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input <% if(product.featured){%>checked<%}%> name="featured" type="checkbox" value="on">Nổi bật
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                        <label>Mô tả sản phẩm</label>
+                                        <textarea id="description" name="description" required class="form-control" rows="3"><%=product.description%></textarea>
+                                        <script>
+                                            CKEDITOR.replace("description");
+                                        </script>
+                                    </div>
+                                <button type="submit" name="sbm" class="btn btn-primary">Cập nhật</button>
+                                <button id="btn-exit" type="reset" class="btn btn-default">Thoát</button>
+                            </div>
+                        </form>
+                        </div>
+                    </div>
+                </div><!-- /.col-->
+            </div><!-- /.row -->
+		
+	</div>	<!--/.main-->
+    <%- include('../layout/footer.ejs')%>
+    <script>
+        $('#btn-exit').click(function() {
+            window.location.href = '/admin/products';
+            return false;
+        });
+        $(function(){
+            var requiredCheckboxes = $('.options :checkbox[required]');
+            requiredCheckboxes.change(function(){
+                if(requiredCheckboxes.is(':checked')) {
+                    requiredCheckboxes.removeAttr('required');
+                } else {
+                    requiredCheckboxes.attr('required', 'required');
+                }
+            });
+        });
+    </script>
+    <style>
+        .black{
+            color: black;
+            margin-right: 7px;
+        }
+        .while{
+            color: #FF6F61;
+            margin-right: 7px;
+        }
+        .red{
+            color: red;
+            margin-right: 7px;
+        }
+        .blue{
+            color: blue;
+            margin-right: 7px;
+        }
+        .yellow{
+            color: yellow;
+            margin-right: 7px;
+        }
+    </style>	
+    <%- include("../layout/footer")%>
+</body>
+
+</html>

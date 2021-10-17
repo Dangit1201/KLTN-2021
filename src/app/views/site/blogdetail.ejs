@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%-include("layout/head", {title: "Chi tiết bài viết"})%>
+    </head>
+
+    <body>
+        <!-- Top bar Start -->
+        <%-include("layout/menu")%>
+        <!-- Bottom Bar End --> 
+        
+        <!-- Breadcrumb Start -->
+        <div class="breadcrumb-wrap">
+            <div class="container-fluid">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="/blog">24h công nghệ</a></li>
+                    <li class="breadcrumb-item active">Chi tiết bài viết</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Breadcrumb End -->
+        
+        <!-- Login Start -->
+        <div id="wrapper" class="login">
+            <div  class="container-fluid">
+                <div  class="row">
+                    <div  class="col-lg-9 mx-auto">
+                        
+                            <div id="loginsite" class="login-form">
+                               <h2><%=blog.title%></h2>
+                               <div><p><%=blog.nameuser%>&emsp;<%=blog.updatedAt.toLocaleString('vi-VN')%></p>
+                                <hr>
+                                </div>
+                               <div>
+                                   <p><%-blog.content%></p>
+                               </div>
+                            </div>
+
+                            <div id="idblogless" class="product">
+                                <div id="section-header-blog" class="section-header">
+                                    <h1>Các bài viết tương tự</h1>
+                                </div>
+                                <div class="row align-items-center product-slider product-slider-3">
+                                <%for(x in blogshare){%>
+                                    <div class="col-md-4">
+                                        <div id="divcard" class="card" style="width: 18rem;">
+                                            <img class="card-img-top" src="/static/images/<%=blogshare[x].thumbnail%>" alt="Card image cap">
+                                            <div class="card-body">
+                                              <a href="/blogdetail/<%=blogshare[x].id%>"><p class="card-text" ><%=blogshare[x].title%></p></a>
+                                            </div>
+                                          </div>
+                                    </div>
+                                <%}%>
+                                </div>
+                            </div>   
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Login End -->
+        <style>
+            #idblogless{
+                margin-bottom: 10px;
+            }
+            #section-header-blog{
+                margin-bottom: 10px;
+            }
+           /*  #divcard{
+                height: 100px;
+            } */
+            .card-body{
+                height: 150px;
+            }
+            
+        </style>
+        
+        <!-- Footer Start -->
+        <%-include("layout/footer")%>
+        
+    </body>
+</html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%-include("../layout/head", {title: "Quên mật khẩu"})%>
+    </head>
+
+    <body>
+        <!-- Top bar Start -->
+        <%-include("../layout/menu")%>
+        <!-- Bottom Bar End --> 
+        
+        <!-- Breadcrumb Start -->
+        <div class="breadcrumb-wrap">
+            <div class="container-fluid">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Lấy lại mật khẩu</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Breadcrumb End -->
+        
+        <!-- Login Start -->
+        <div class="login">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6 mx-auto">   
+                    <form action="/login" role="form" method="get" ></form> 
+                        <div class="register-form">
+                            <div class="row">
+                                
+                                
+                                <div class="col-md-12 text-center">
+                                    <img src="/static/site/img/11.png" alt="sussces" width="100" height="100" >
+                                </div>
+                                
+                                
+                                <div id="lab"class="col-md-12">
+                                    <label>Chúng tôi đã gửi cho bạn một email hướng dẫn khởi tạo lại mật khẩu truy cập. Bạn hãy kiểm tra email và làm theo hướng dẫn.</label>
+                                </div>
+                                <hr>
+                                <div id="btn-register" class="col-md-12 text-center">
+                                    <button class="btn">Quay lại trang chủ</button>
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+        <!-- Login End -->
+        
+        <style>
+            #btn-register{
+                margin-bottom: 5px;
+            }
+            #lab{
+                margin-top: 15px;
+                margin-bottom: 15px;
+            }
+        </style>
+        <!-- Footer Start -->
+        <%-include("../layout/footer")%>
+        <script>
+            $('#btn-register').click(function() {
+            window.location.href = '/';
+            return false;
+            });
+        </script>
+    </body>
+</html>

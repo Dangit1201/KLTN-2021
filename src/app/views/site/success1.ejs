@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%-include("layout/head", {title: "Mua hàng thành công"})%>
+    </head>
+
+    <body>
+        <!-- Top bar Start -->
+        <%-include("layout/menu")%>
+        <!-- Bottom Bar End --> 
+        
+        <!-- Breadcrumb Start -->
+        <div class="breadcrumb-wrap">
+            <div class="container-fluid">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                    <li class="breadcrumb-item active">Trạng thái mua hàng</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Breadcrumb End -->
+        
+        <!-- Login Start -->
+        <div class="login">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-10 mx-auto">   
+                    <form action="/login" role="form" method="get" ></form> 
+                        <div class="register-form">
+                            <div class="row">
+                                
+                                <% if(code=="00"){%>
+                                    <div class="col-md-12 text-center">
+                                        <img src="/static/site/img/thanhcong.png" alt="sussces" width="400" height="287" >
+                                    </div>
+                                    
+                                    <div class="col-md-12 text-center">
+                                        <label id="label">BẠN ĐÃ THANH TOÁN THÀNH CÔNG !</label>
+                                    </div>
+                                    <div id="lab" class="col-md-12 text-center">
+                                        <label >Vui lòng kiểm tra email để xem lại thông tin đơn hàng của mình.</label>
+                                    </div>
+                                    <hr>
+                                    <div id="btn-register" class="col-md-12 text-center">
+                                        <button class="btn">Tiếp tục mua hàng!</button>
+                                    </div>
+                                <% } else {%>
+                                    <div class="col-md-12 text-center">
+                                        <img src="/static/site/img/fail.png" alt="sussces" width="250" height="250" >
+                                    </div>
+                                    
+                                    <div class="col-md-12 text-center">
+                                        <label id="label">BẠN ĐÃ THANH TOÁN THẤT BẠI !</label>
+                                    </div>
+                                    <hr>
+                                    <div id="btn-register" class="col-md-12 text-center">
+                                        <button class="btn">Tiếp tục mua hàng!</button>
+                                    </div>
+                                <% }%>
+                                
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+                   
+                </div>
+            </div>
+        </div>
+        <!-- Login End -->
+        
+        <style>
+            #btn-register{
+                margin-bottom: 15px;
+            }
+            #label{
+                color: green;
+                font-weight: bold;
+                margin-bottom: 20px;
+            }
+            #lab{
+                margin-bottom: 3px;
+            }
+        </style>
+        <!-- Footer Start -->
+        <%-include("layout/footer")%>
+        <script>
+            $('#btn-register').click(function() {
+            window.location.href = '/';
+            return false;
+            });
+        </script>
+    </body>
+</html>

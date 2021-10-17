@@ -1,0 +1,98 @@
+<div class="top-bar">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <i class="fa fa-envelope"></i>
+                Dangkhoashopdt@gmail.com
+            </div>
+            <div class="col-sm-6">
+                <i class="fa fa-phone-alt"></i>
+                +0347453377
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Top bar End -->
+
+<!-- Nav Bar Start -->
+<div class="nav">
+    <div class="container-fluid">
+        <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+            <a href="/" class="navbar-brand">MENU</a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                <div class="navbar-nav mr-auto">
+                    <a href="/" class="nav-item nav-link active">Trang chủ</a>
+                    <a href="/category" class="nav-item nav-link">Sản phẩm</a>
+                    <a href="/blog" class="nav-item nav-link">24h công nghệ</a>
+                    <a href="/cart" class="nav-item nav-link">Giỏ hàng</a>
+                    <% if(usershare==1){%>
+                        <a href="/checkout" class="nav-item nav-link">Thanh toán</a>
+                     <%} %>
+                   
+                    <% if(usershare==1){%>
+                        <a href="/account" class="nav-item nav-link">Tài khoản</a>
+                     <%} %>
+                    
+                    <a href="/contact" class="nav-item nav-link">Liên hệ</a>
+                </div>
+                <div class="navbar-nav ml-auto">
+                    <div class="nav-item dropdown">
+
+                        <% if(usershare==2){%>
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Tài khoản</a>
+                            <div class="dropdown-menu">
+                            <a href="/login" class="dropdown-item">Đăng nhập</a>
+                            <a href="/register" class="dropdown-item">Đăng ký</a>
+                            </div>
+                         <%} else{ %>  
+                            <a href="/logout" class="dropdown-item">Đăng xuất</a>
+                        <% } %>
+
+                        
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</div>
+<!-- Nav Bar End -->      
+
+<!-- Bottom Bar Start -->
+<div class="bottom-bar">
+    <div class="container-fluid">
+        <div class="row align-items-center">
+            <div class="col-md-3">
+                <div class="logo">
+                    <a href="/">
+                        <img src="/static/site/img/logo.png" alt="Logo">
+                    </a>
+                </div>
+            </div>
+        
+            <div class="col-md-6">
+                <form class="form-inline" action="/search">
+                <div class="search">
+                    <input id="searchweb" type="text" name="term" placeholder="Tìm kiếm">
+                    <button type="submit"><i class="fa fa-search"></i></button>
+                </div>
+                </form>
+            </div>
+        
+            <div class="col-md-3">
+                <div class="user">
+                    <a href="/cart" class="btn cart">
+                        <i class="fa fa-shopping-cart"></i>
+                        <span>(<%=totalCartItems%>)</span>
+                        
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+  

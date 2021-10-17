@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%-include("../layout/head", {title: "Trang Chủ"})%>
+    </head>
+
+    <body>
+        <!-- Top bar Start -->
+        <%-include("../layout/menu")%>
+        <!-- Bottom Bar End --> 
+        
+        <!-- Breadcrumb Start -->
+        <div class="breadcrumb-wrap">
+            <div class="container-fluid">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+            
+                    <li class="breadcrumb-item active">Đăng nhập</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Breadcrumb End -->
+        
+        <!-- Login Start -->
+        <div id="wrapper" class="login">
+            <div  class="container-fluid">
+                <div  class="row">
+                    <div  class="col-lg-6 mx-auto">
+                        <form role="form" method="post">
+                            <div id="loginsite" class="login-form">
+                                <div class="row">
+                                    <legend class="text-center"><b>Đổi mật khẩu mới</b></legend>
+                                    <% if(error){%>
+                                        <div class="col-md-12 alert alert-danger"><%=error%></div>
+                                    <% }%>
+                                    <div class="col-md-6">
+                                       
+                                        <input class="form-control" name="newpass" id="password"  onkeyup='check();' pattern="^[a-zA-Z0-9]+${6}" type="password" required placeholder="Mật khẩu" autofocus minlength="6">
+                                    </div>
+                                    <div class="col-md-6">
+                                        
+                                        <input class="form-control" name="new2pass" id="confirm_password"  onkeyup='check();' pattern="^[a-zA-Z0-9]+${6}" type="password" required placeholder="Nhập lại mật khẩu" minlength="6">
+                                        <span id='message'></span>
+                                    </div>
+                                    
+                                    <div class="col-md-12 text-center">
+                                        <button class="btn" type="submit">Đồng ý</button>
+                                        
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </form>    
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Login End -->
+        <style>
+            #btnregistersite{
+                margin-top: 20px;
+            }
+            #registersite{
+                background :#ec1d1d;
+                
+            }   
+        </style>
+        <script>
+             var check = function() {
+                if (document.getElementById('password').value ==
+                    document.getElementById('confirm_password').value) {
+                    document.getElementById('message').style.color = 'green';
+                    document.getElementById('message').innerHTML = 'chính xác';
+                } else {
+                    document.getElementById('message').style.color = 'red';
+                    document.getElementById('message').innerHTML = 'chưa chính xác';
+                    }
+                }
+        </script>
+        <!-- Footer Start -->
+        <%-include("../layout/footer")%>
+        
+    </body>
+</html>

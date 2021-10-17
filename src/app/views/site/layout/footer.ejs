@@ -1,0 +1,120 @@
+<div class="footer">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="footer-widget">
+                    <h2>Liên lạc</h2>
+                    <div class="contact-info">
+                        <p><i class="fa fa-map-marker"></i>301 Trâu Quỳ,Gia Lâm,Hà Nội</p>
+                        <p><i class="fa fa-envelope"></i>dangkhoashopdt@gmail.com</p>
+                        <p><i class="fa fa-phone"></i>+0347453377</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="footer-widget">
+                    <h2>Theo dõi chúng tôi</h2>
+                    <div class="contact-info">
+                        <div class="social">
+                            <a href=""><i class="fab fa-twitter"></i></a>
+                            <a href="https://www.facebook.com/pham.dang.7737/"><i class="fab fa-facebook-f"></i></a>
+                            <a href=""><i class="fab fa-linkedin-in"></i></a>
+                            <a href=""><i class="fab fa-instagram"></i></a>
+                            <a href=""><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="footer-widget">
+                    <h2>Thông tin cửa hàng</h2>
+                    <ul>
+                        <li><a href="#">Về chúng tôi</a></li>
+                        <li><a href="#">Chính sách bảo mật</a></li>
+                        <li><a href="#">Điều khoản & Điều kiện</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+                <div class="footer-widget">
+                    <h2>Thông tin mua hàng</h2>
+                    <ul>
+                        <li><a href="#">Chính sách thanh toán</a></li>
+                        <li><a href="#">Chính sách vận chuyển</a></li>
+                        <li><a href="#">Chính sách hoàn trả</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row payment align-items-center">
+            <div class="col-md-6">
+                <div class="payment-method">
+                    <h2>Các hình thức thanh toán:</h2>
+                    <img src="/static/site/img/payment-method.png" alt="Payment Method" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="payment-security">
+                    <h2>Bảo mật bởi:</h2>
+                    <img src="/static/site/img/godaddy.svg" alt="Payment Security" />
+                    <img src="/static/site/img/norton.svg" alt="Payment Security" />
+                    <img src="/static/site/img/ssl.svg" alt="Payment Security" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer End -->
+
+<!-- Footer Bottom Start -->
+<div class="footer-bottom">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 copyright">
+                <p>@2021 ĐĂNG KHOA MOBILE </p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer Bottom End -->       
+
+<!-- Back to Top -->
+<a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="/static/site/lib/easing/easing.min.js"></script>
+<script src="/static/site/lib/slick/slick.min.js"></script>
+
+<!-- test -->
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script> -->
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<!-- Template Javascript -->
+<script src="/static/site/js/main.js"></script>
+
+<script>
+   $(document).ready(function(){
+       $('#searchweb').autocomplete({
+           source: async function(req,res){
+               let data = await fetch(`http://localhost:3001/autocomplete?term=${req.term}`)
+                .then(results => results.json())
+                .then(results => results.map(result=>{
+                    return {label: result.name, value:result.name , id:result._id,slug:result.slug}
+                }));
+            res(data);
+           },
+           minLenght:2,
+           select: function(event,ui){
+               window.location.href = "/product-"+ui.item.slug+"."+ui.item.id+"";
+              
+           }
+       })
+   }) 
+</script>

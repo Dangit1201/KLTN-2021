@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<%- include('../layout/head.ejs', {title: "Danh mục sản phẩm" })%>
+</head>
+
+<body>
+	<%- include('../layout/header.ejs') %>
+
+		
+	<!-- /.container-fluid -->
+		
+	<%- include('../layout/sidebar.ejs') %>
+	<!--/.sidebar-->
+		
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
+		<div class="row">
+			<ol class="breadcrumb">
+				<li><a href="/admin"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
+				<li><a href="/admin/categories">Quản lý danh mục</a></li>
+				<li class="active"><span ><%=category.title%></span> </li>
+			</ol>
+		</div><!--/.row-->
+		
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header">Danh mục:<span id="color-sapn"><%=category.title%></span></h1>
+			</div>
+		</div><!--/.row-->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="col-md-8">
+                            
+                        <form action="/admin/categories/update/<%=category._id%>"role="form" method="post">
+							<% if(data && data.error){%>
+								<div class="alert alert-danger"><%=data.error%></div>
+								<% }%>
+                            <div class="form-group">
+                                <label>Tên danh mục:</label>
+                                <input type="text" name="title" required value="<%=category.title%>" class="form-control" placeholder="Tên danh mục...">
+                            </div>
+							<div class="form-group">
+								<label>Trạng thái</label>
+								<select name="status" class="form-control">
+									<option <% if(category.status){%>selected<%}%> value=1>Hoạt động</option>
+                                    <option <% if(!category.status){%>selected<%}%> value=0>Không hoạt động</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label>Mô tả danh mục</label>
+								<textarea required name="descriptions" class="form-control" rows="3"><%=category.descriptions%></textarea>
+							</div>
+                            <button type="submit" name="sbm" class="btn btn-primary">Cập nhật</button>
+							<a  href="" class="btn btn-danger"  data-id="<%=category.id%>" data-title="<%=category.title%>" data-toggle="modal" data-target="#delete-modal-dm"> Xóa </a>
+                            <button id="btn-exit" type="reset" class="btn btn-default">Thoát</button>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div><!-- /.col-->
+			<%- include('../layout/footer.ejs')%>
+			<form name="delete-form-danhmuc" method="post"></form>
+
+			<div id="delete-modal-dm"class="modal" tabindex="-1" role="dialog">
+				<div class="modal-dialog" role="document">
+				  <div class="modal-content">
+					<div id="modal-title-name" class="modal-header">
+					<h5 class="modal-title">Bạn có muốn xóa danh mục sản phẩm này: <span id="spanproduct"></span> ?</h5>
+					  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					  </button>
+					</div>
+					
+					<div class="modal-footer">
+					  <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+					  <button  id="btn-delete-form" type="button" class="btn btn-danger">Xóa bỏ</button>
+					</div>
+				  </div>
+				</div>
+			  </div>
+	</div>	<!--/.main-->
+	<script>
+		
+		document.addEventListener('DOMContentLoaded',function(){
+			$('#delete-modal-dm').on('show.bs.modal', function (event) {
+  			var button = $(event.relatedTarget) 
+  			ids = button.data('id') 
+			titles = button.data('title') 
+			let modaltitlename = document.getElementById("spanproduct");
+			modaltitlename.innerHTML = titles;
+			})
+		});
+		var formdele = document.forms['delete-form-danhmuc'];
+		var btndele = document.getElementById('btn-delete-form');
+		
+		btndele.onclick = function(){
+			
+			formdele.action='/admin/categories/delete/'+ids;
+			formdele.submit();
+			
+		}
+		$('#btn-exit').click(function() {
+    	window.location.href = '/admin/categories';
+    	return false;
+		});
+	</script>
+	<style>
+		#color-sapn{
+			color:rgb(128, 0, 100);
+		}
+		.modal-title{
+		color: green;
+		text-align: center;
+		text-transform: uppercase capitalize;
+		}
+		#spanproduct{
+		color:blue;
+		text-transform: uppercase;
+		}
+	
+</style>
+	</style>
+	<%- include('../layout/footer.ejs')%>
+</body>
+
+
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <%-include("layout/head", {title: "Tất cả sản phẩm"})%>
+    </head>
+
+    <body>
+        <!-- Top bar Start -->
+        <%-include("layout/menu")%>
+        <!-- Bottom Bar End -->  
+        
+        <!-- Breadcrumb Start -->
+        <div class="breadcrumb-wrap">
+            <div class="container-fluid">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a >Tìm kiếm  <%= keyword%></a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- Breadcrumb End -->
+        
+        <!-- Product List Start -->
+        <div class="product-view">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="product-view-top">
+                                    <div class="row">
+                                        
+                                <div>Kết quả tìm kiếm với sản phẩm: <span id="spancolor"><%=keyword%></span></div>
+                                
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-12">
+                                <div id="myTable" class="row">
+                                    <% for(let product of products){%>
+                                        <div id="div-phone" class="col-md-4">
+                                            <div  class="product-item">
+                                                <div class="product-title">
+                                                    <a href="/product-<%=product.slug%>.<%=product._id%>"><%=product.name%></a>
+                                                    <div class="ratting">
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="product-image">
+                                                    <a href="/product-<%=product.slug%>.<%=product._id%>">
+                                                        <img src="/static/images/<%=product.thumbnail%>" alt="Product Image">
+                                                    </a>
+                                                    <div class="product-action">
+                                                       
+                                                       
+                                                       <!--  <a href="/product-<%=product.slug%>.<%=product._id%>"><i class="fa fa-search"></i></a> -->
+                                                    </div>
+                                                </div>
+                                                <div class="product-price">
+                                                    <h3><span><%=product.price.toLocaleString('vi-VN')%>đ</span></h3>
+                                                    <a class="btn" href="/product-<%=product.slug%>.<%=product._id%>"><i class="fa fa-shopping-cart"></i>Mua ngay</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% }%>   
+                                </div>
+                            </div>
+                            
+                            
+                        </div>
+                        
+                        <!-- Pagination Start -->
+                        <div class="col-md-12">
+                            <nav aria-label="Page navigation example">
+                                <ul class="pagination justify-content-center">
+                        
+                                        <%if(page>1){%>
+                                            <li class="page-item"><a class="page-link"
+                                                    href="/search?term=<%=keyword%>&page=<%= page-1%>">&laquo;</a>
+                                            </li>
+                                            <%}%>
+                                                <%for(x in pages){%>
+                                                    <%if(pages[x]!=='...'){%>
+                                                        <li class="page-item <%=pages[x]===page ? 'active':''%>"><a
+                                                                class="page-link"
+                                                                href="/search?term=<%=keyword%>&page=<%= pages[x]%>">
+                                                                <%=pages[x]%>
+                                                            </a></li>
+                                                        <%} else {%>
+                                                            <li class="page-item"><a class="page-link"
+                                                                    onclick="return false"
+                                                                    href="/search?term=<%=keyword%>&page=<%= pages[x]%>">
+                                                                    <%=pages[x]%>
+                                                                </a></li>
+                                                            <%}%>
+                                                                <%}%>
+                                                                    <%if(page<totalPage){%>
+                                                                        <li class="page-item"><a class="page-link"
+                                                                                href="/search?term=<%=keyword%>&page=<%= page+1%>">&raquo;</a>
+                                                                        </li>
+                                                                        <%}%>
+                                       
+                                </ul>
+                            </nav>
+                        </div>
+                      
+                        <!-- Pagination Start -->
+                    </div>           
+                    
+                    <!-- Side Bar Start -->
+                    <%-include("layout/sidebar")%>
+                    <!-- Side Bar End -->
+                </div>
+            </div>
+        </div>
+        <!-- Product List End -->  
+        
+        <!-- Brand Start -->
+        <div class="brand">
+            <div class="container-fluid">
+                <div class="brand-slider">
+                    <% for(let x of advertisementsshare){%>
+                    <div class="brand-item"><img src="/static/images/<%=x.thumbnail%>" alt=""></div>
+                    <% }%>
+                </div>
+            </div>
+           
+        </div>
+        <!-- Brand End -->
+        
+        <!-- Footer Start -->
+        <%-include("layout/footer")%>
+        <style>
+            #spancolor{
+                color:red;
+            }
+            #div-phone{
+                padding-right: 1px;
+            }
+        </style>
+        
+    </body>
+</html>
