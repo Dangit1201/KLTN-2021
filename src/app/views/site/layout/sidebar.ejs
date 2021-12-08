@@ -26,12 +26,11 @@
     <div class="sidebar-widget brands">
         <h2 class="title">Nhãn hiệu</h2>
         <ul>
-            <li><a href="/category-iphone.60c9c913dbf8b12ff844ef53">Iphone </a><span>(23)</span></li>
-            <li><a href="/category-sam-sung.60c9bf2371da2f2f207dbc00">Sam sung </a><span>(17)</span></li>
-            <li><a href="/category-realme.60cbfa712a157f2e04e50019">Realme </a><span>(8)</span></li>
-            <li><a href="/category-oppo.60c9c6b69c4fba061484d525">Oppo</a><span>(15)</span></li>
-            <li><a href="/category-vsmart.60cbfafd2a157f2e04e5001b">Vsmart </a><span>(6)</span></li>
-            <li><a >Htc</a><span>(8)</span></li>
+            <% for(let cate of cateShare){%>
+               
+            <li><a href="/category-<%=cate.slug%>.<%=cate.id%>"><%=cate.title%> </a><span>(<%=cate.descriptions%>)</span></li>
+                
+            <% }%>
         </ul>
     </div>
     

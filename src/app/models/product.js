@@ -9,12 +9,10 @@ const productSchema = new mongoose.Schema({
     cat_id:{
         type: mongoose.Types.ObjectId,
         ref: "Category",
-        required: true,
     },
     color_id:{
         type: mongoose.Types.ObjectId,
         ref: "Color",
-        
     },
     
     slug:{

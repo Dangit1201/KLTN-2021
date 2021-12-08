@@ -14,15 +14,14 @@ const path = require("path");
 const dateFormat = require('dateformat');
 const sha256 = require('sha256');
 const querystring = require('qs');
+const bcrypt = require('bcryptjs');
 
 
 const home = async (req, res)=>{
-    
-    const LatestProducts = await ProductModel.find().sort({_id: -1}).limit(6);
+    const categoryLocal = await CategoryModel.find({ status : true }).lean().distinct('_id');
+    const LatestProducts = await ProductModel.find().where('cat_id').in(categoryLocal).sort({_id: -1}).limit(6);
     const sliders = await AdvertisementsModel.find({typeofadv:"slider"}).sort({_id: -1}).limit(3);
-    const FeaturedProducts = await ProductModel.find({
-        featured: true,
-    }).sort({_id: -1}).limit(6);
+    const FeaturedProducts = await ProductModel.find({featured: true,}).where('cat_id').in(categoryLocal).sort({_id: -1}).limit(6);
     res.render("site/index", {
         LatestProducts:LatestProducts,
         FeaturedProducts:FeaturedProducts,
@@ -33,7 +32,8 @@ const category = async (req, res)=>{
     const id = req.params.id;
     let ram = req.query.ram;
     let memory = req.query.memory;
-                                        
+      
+    const categoryLocal =  CategoryModel.find({ status : true }).lean().distinct('_id');
     const category = await CategoryModel.findById({_id:id});
     const title = category.title
     
@@ -279,33 +279,35 @@ const success = (req, res)=>{
 }
 const comment = async (req, res)=>{
     const id = req.params.id.toString();
-    const productcomment = await ProductModel.findById(id);
+    const productComment = await ProductModel.findById(id);
     const comment = {
         prd_id: id,
         rating: req.body.star,
         full_name: req.body.full_name,
         email: req.body.email,
         body: req.body.body,
-        name: productcomment.name,
+        name: productComment.name,
     }
     await new CommentModel(comment).save();
     res.redirect(req.path);
 }
 
-const allcategory = async (req, res)=>{
+const allCategory = async (req, res)=>{
     let sort = req.query.sort;
     let ram = req.query.ram;
     let memory = req.query.memory;
+    const categoryLocal = await CategoryModel.find({ status : true }).lean().distinct('_id');
     if(sort=='14'){
         
         const page = parseInt(req.query.page) || 1;
         const limit = 9;
         skip = page * limit - limit;
-        const total = await ProductModel.find({price:{ $gte:1000000 , $lte:4000000}}).count();
+        
+        const total = await ProductModel.find({price:{ $gte:1000000 , $lte:4000000}}).where('cat_id').in(categoryLocal).count();
         
         const totalPage = Math.ceil(total/limit);
 
-        const products = await ProductModel.find({price:{ $gte:1000000 , $lte:4000000}})
+        const products = await ProductModel.find({price:{ $gte:1000000 , $lte:4000000}}).where('cat_id').in(categoryLocal)
                                             .skip(skip)
                                             .limit(limit)
                                             .sort({"price": 1});
@@ -325,11 +327,11 @@ const allcategory = async (req, res)=>{
         skip = page * limit - limit;
 
         console.log('sort48',typeof(sort))
-        const total = await ProductModel.find({price:{ $gte:4000000 , $lte:8000000}}).count();
+        const total = await ProductModel.find({price:{ $gte:4000000 , $lte:8000000}}).where('cat_id').in(categoryLocal).count();
         
         const totalPage = Math.ceil(total/limit);
 
-        const products = await ProductModel.find({price:{ $gte:4000000 , $lte:8000000}})
+        const products = await ProductModel.find({price:{ $gte:4000000 , $lte:8000000}}).where('cat_id').in(categoryLocal)
                                             .skip(skip)
                                             .limit(limit)
                                             .sort({"price": 1});
@@ -349,11 +351,11 @@ const allcategory = async (req, res)=>{
         const limit = 9;
         skip = page * limit - limit;
 
-        const total = await ProductModel.find({price:{ $gte:8000000 , $lte:15000000}}).count();
+        const total = await ProductModel.find({price:{ $gte:8000000 , $lte:15000000}}).where('cat_id').in(categoryLocal).count();
         
         const totalPage = Math.ceil(total/limit);
 
-        const products = await ProductModel.find({price:{ $gte:8000000 , $lte:15000000}})
+        const products = await ProductModel.find({price:{ $gte:8000000 , $lte:15000000}}).where('cat_id').in(categoryLocal)
                                             .skip(skip)
                                             .limit(limit)
                                             .sort({"price": 1});
@@ -373,11 +375,11 @@ const allcategory = async (req, res)=>{
         skip = page * limit - limit;
 
         
-        const total = await ProductModel.find({price:{ $gte:15000000 , $lte:22000000}}).count();
+        const total = await ProductModel.find({price:{ $gte:15000000 , $lte:22000000}}).where('cat_id').in(categoryLocal).count();
         
         const totalPage = Math.ceil(total/limit);
 
-        const products = await ProductModel.find({price:{ $gte:15000000 , $lte:22000000}})
+        const products = await ProductModel.find({price:{ $gte:15000000 , $lte:22000000}}).where('cat_id').in(categoryLocal)
                                             .skip(skip)
                                             .limit(limit)
                                             .sort({"price": 1});
@@ -396,11 +398,11 @@ const allcategory = async (req, res)=>{
         const page = parseInt(req.query.page) || 1;
         const limit = 9;
         skip = page * limit - limit;
-        const total = await ProductModel.find({price:{ $gte:22000000 }}).count();
+        const total = await ProductModel.find({price:{ $gte:22000000 }}).where('cat_id').in(categoryLocal).count();
         
         const totalPage = Math.ceil(total/limit);
 
-        const products = await ProductModel.find({price:{ $gte:22000000 }})
+        const products = await ProductModel.find({price:{ $gte:22000000 }}).where('cat_id').in(categoryLocal)
                                             .skip(skip)
                                             .limit(limit)
                                             .sort({"price": 1});
@@ -418,11 +420,11 @@ const allcategory = async (req, res)=>{
         const page = parseInt(req.query.page) || 1;
         const limit = 9;
         skip = page * limit - limit;
-        const total = await ProductModel.find({ram:ram}).count();
+        const total = await ProductModel.find({ram:ram}).where('cat_id').in(categoryLocal).count();
         
         const totalPage = Math.ceil(total/limit);
 
-        const products = await ProductModel.find({ram:ram})
+        const products = await ProductModel.find({ram:ram}).where('cat_id').in(categoryLocal)
                                             .skip(skip)
                                             .limit(limit)
                                             .sort({"price": 1});
@@ -440,11 +442,11 @@ const allcategory = async (req, res)=>{
         const page = parseInt(req.query.page) || 1;
         const limit = 9;
         skip = page * limit - limit;
-        const total = await ProductModel.find({memory:memory}).count();
+        const total = await ProductModel.find({memory:memory}).where('cat_id').in(categoryLocal).count();
         
         const totalPage = Math.ceil(total/limit);
 
-        const products = await ProductModel.find({memory:memory})
+        const products = await ProductModel.find({memory:memory}).where('cat_id').in(categoryLocal)
                                             .skip(skip)
                                             .limit(limit)
                                             .sort({"price": 1});
@@ -463,10 +465,10 @@ const allcategory = async (req, res)=>{
         const page = parseInt(req.query.page) || 1;
         const limit = 9;
         skip = page * limit - limit;
-        const total = await ProductModel.find().countDocuments();
+        const total = await ProductModel.find().where('cat_id').in(categoryLocal).countDocuments();
         const totalPage = Math.ceil(total/limit);
         
-        const products = await ProductModel.find()
+        const products = await ProductModel.find().where('cat_id').in(categoryLocal)
                                             .skip(skip)
                                             .limit(limit)
                                             .sort({"_id": -1});
@@ -485,9 +487,10 @@ const allcategory = async (req, res)=>{
 }
 
 const autocomplete = async (req, res)=>{
-    var regax = new RegExp(req.query["term"],'i'); 
+    var regexp = new RegExp(req.query["term"],'i'); 
+    const categoryLocal = await CategoryModel.find({ status : true }).lean().distinct('_id');
    try{
-       let result = await ProductModel.find({name:regax}).sort({"updatedAt":-1}).sort({"createdAt":-1}).limit(8); 
+       let result = await ProductModel.find({name:regexp}).where('cat_id').in(categoryLocal).sort({"createdAt":-1}).limit(8); 
        res.send(result);
    } catch(e){
        res.status(500).send({message:e.message});
@@ -496,15 +499,16 @@ const autocomplete = async (req, res)=>{
 }
 const search = async(req, res)=>{
     var keyword = req.query.term;
-    var regax = new RegExp(req.query["term"],'i');
+    var reGax = new RegExp(req.query["term"],'i');
 
     const page = parseInt(req.query.page) || 1;
     const limit = 9;
     skip = page * limit - limit;
-    let total = await ProductModel.find({name:regax}).countDocuments();
+    const categoryLocal = await CategoryModel.find({ status : true }).lean().distinct('_id');
+    let total = await ProductModel.find({name:reGax}).where('cat_id').in(categoryLocal).countDocuments();
     const totalPage = Math.ceil(total/limit);
 
-    let products = await ProductModel.find({name:regax}).sort({"updatedAt":-1}).sort({"createdAt":-1}).skip(skip)
+    let products = await ProductModel.find({name:reGax}).where('cat_id').in(categoryLocal).sort({"createdAt":-1}).skip(skip)
     .limit(limit); 
      
     res.render("site/search",{products,
@@ -514,11 +518,12 @@ const search = async(req, res)=>{
         totalPage: totalPage,
     });
 }
-const searchallcat = async (req, res)=>{
+const searchAllCat = async (req, res)=>{
     const keyword = req.body.data || "";
     
     var regax = new RegExp(keyword,'i');
-    let products = await ProductModel.find({name:regax}).sort({"updatedAt":-1}).sort({"createdAt":-1});
+    const categoryLocal =  CategoryModel.find({ status : true }).lean().distinct('_id');
+    let products = await ProductModel.find({name:regax}).where('cat_id').in(categoryLocal).sort({"createdAt":-1});
 
     res.render("site/components/table",{products,keyword});
 }
@@ -976,9 +981,12 @@ const editpass = async (req, res)=>{
     const orders = await OrderModel.find({iduser:user.id}).sort({createdAt:-1});
     const id = req.params.id;
     const body = req.body;
-    if(user.password==body.password&&body.newpass==body.new2pass){
+    
+    
+    if((await user.isPasswordMatch(body.password))&&body.newpass==body.new2pass){
+        const passwordHash= await bcrypt.hash(body.newpass, 10);
         const user1 = {
-            password: body.newpass,
+            password: passwordHash,
         } 
         await UserModel.updateOne({_id: id}, {$set: user1});
         res.redirect("/account");
@@ -1020,30 +1028,31 @@ const orderdelete= async (req,res)=>{
 
 
 module.exports = {
-    home:home,
-    category:category,
-    product:product,
-    search:search,
-    cart:cart,
-    success:success,
-    comment:comment,
-    allcategory:allcategory,
-    contact:contact,
-    account:account,
-    blog:blog,
-    autocomplete:autocomplete,
-    searchallcat:searchallcat,
-    addToCart:addToCart,
-    delCart:delCart,
-    updateCart:updateCart,
-    checkout:checkout,
-    successcheckout:successcheckout,
-    blogdetail:blogdetail,
+    home,
+    category,
+    product,
+    search,
+    cart,
+    success,
+    comment,
+    allCategory,
+    contact,
+    account,
+    blog,
+    autocomplete,
+    searchAllCat,
+    addToCart,
+    delCart,
+    updateCart,
+    checkout,
+    successcheckout,
+    blogdetail,
     editif,
     editpass,
     orderdetail,
     orderdelete,
     vnpayreturn,
     vnpayipn,
+   
     
 }

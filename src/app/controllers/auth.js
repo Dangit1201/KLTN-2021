@@ -8,25 +8,25 @@ const Login = (req, res) => {
 
 const postLogin = async (req, res) => {
   const email = req.body.email.toLowerCase();
-  const pass = req.body.pass;
+  const password = req.body.pass;
   var error;
   
   /**
    * email,password: là tên 2 trường trong collection user
    * lấy ra data và lưu vào user
    */
-  const user = await UserModel.find({ email: email, password: pass });
+  const user = await UserModel.findOne({ email: email });
   const totalCartItems1 = await req.session.cart.reduce((total, product)=>total + product.qty, 0);
 
-  //console.log(user);
+  console.log(user);
 
-   if (user.length > 0 && totalCartItems1 > 0) {
+   if (user && (await user.isPasswordMatch(password)) && totalCartItems1 > 0) {
     req.session.email_user = email;
-    req.session.pass_user = pass; 
+    req.session.pass_user = password; 
     res.redirect("/checkout");
-    } else if (user.length > 0 ) {
+    } else if (user && (await user.isPasswordMatch(password)) ) {
       req.session.email_user = email;
-      req.session.pass_user = pass; 
+      req.session.pass_user = password; 
       res.redirect("/");
       }
     else{
@@ -82,11 +82,11 @@ const adminPostLogin = async (req, res) => {
   //console.log(user);
 
    if(roleadmin.length>0){
-    // khoi tao session mail, pass
-    req.session.email_admin = email;
-    req.session.pass_admin = pass; 
+      // khoi tao session mail, pass
+      req.session.email_admin = email;
+      req.session.pass_admin = pass; 
 
-    res.redirect("/admin");
+      res.redirect("/admin");
     }
     else{
       error = "Tài khoản không hợp lệ hoặc bạn không phải admin!";

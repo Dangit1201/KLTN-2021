@@ -17,5 +17,20 @@ module.exports = async (req, res, next)=>{
         featured: true,
     }).sort({_id: -1}).limit(6);
     res.locals.totalCartItems = await req.session.cart.reduce((total, product)=>total + product.qty, 0);
+    const cate = await CategoryModel.find({ status : true });
+    const category = await CategoryModel.find({ status : true }).lean().distinct('_id');
+    const d=[];
+    for (const a of category) {
+        for(const b of cate){
+            if(a==b.id){
+                const c = await ProductModel.findOne({cat_id:a}).countDocuments();
+                var e = {};
+                e=b;
+                e.descriptions= c;
+                d.push(b);
+            }        
+        }
+    }
+    res.locals.cateShare =d;
     next();
 }

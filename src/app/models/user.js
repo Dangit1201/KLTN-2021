@@ -1,5 +1,6 @@
 // Bước 1: gọi file kết nối tới mongodb, phải có () để thực thi hàm và  lấy được giá trị của return là đối tượng mongoose
 const mongoose = require("../../common/database")();
+const bcrypt = require('bcryptjs');
 
 // Bước 2: sử dụng schema để mô tả collection user
 const userSchema = mongoose.Schema({
@@ -38,6 +39,19 @@ const userSchema = mongoose.Schema({
     default: "member",
   },
 });
+
+userSchema.methods.isPasswordMatch = async function (password) {
+  const user = this
+  return bcrypt.compare(password, user.password)
+}
+
+userSchema.pre('save', async function (next) {
+  const user = this
+  if (user.isModified('password')) {
+      user.password = await bcrypt.hash(user.password, 10)
+  }
+  next();
+})
 
 // Bước 3: Biến lớp user schema thành Model
 // có 3 tham số:

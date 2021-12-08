@@ -189,7 +189,24 @@
                 </div>
             </div>
         </div>
-        <!-- Call to Action End -->       
+        <!-- Call to Action End -->   
+        
+        <!-- Recent Product Start -->
+        <div class="recent-product product">
+            <div class="container-fluid">
+                <div class="section-header">
+                    <h1>Sản phẩm flashSale</h1>
+                </div>
+                <div class="row align-items-center product-slider product-slider-4">
+                    
+                    <% for(let product of LatestProducts){%>
+                            <%- include("components/product-item", {product:product})%>    
+                        <% }%>
+                    
+                </div>
+            </div>
+        </div>
+        <!-- Recent Product End -->
         
         <!-- Featured Product Start -->
         <div class="featured-product product">
@@ -207,7 +224,9 @@
                 </div>
             </div>
         </div>
-        <!-- Featured Product End -->       
+        <!-- Featured Product End -->   
+        
+        
         
         <!-- Newsletter Start -->
         <div class="newsletter">
@@ -225,7 +244,9 @@
                 </div>
             </div>
         </div>
-        <!-- Newsletter End -->        
+        <!-- Newsletter End -->  
+        
+        
         
         <!-- Recent Product Start -->
         <div class="recent-product product">
@@ -243,6 +264,8 @@
             </div>
         </div>
         <!-- Recent Product End -->
+
+        
         
         <!-- Review Start -->
         <div class="review">

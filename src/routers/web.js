@@ -14,8 +14,6 @@ const BlogController = require("../app/controllers/blog");
 const StatisticalController = require("../app/controllers/statistical");
 
 
-
-
 //Goi middlewares
 const UploadMiddleware = require("../app/middlewares/upload");
 const AuthMiddleware = require("../app/middlewares/auth");
@@ -74,12 +72,12 @@ router.get("/search", SiteContoller.search);
 router.get("/cart", SiteContoller.cart);
 router.get("/success", SiteContoller.success);
 router.post("/product-:slug.:id", SiteContoller.comment);
-router.get("/category", SiteContoller.allcategory);
+router.get("/category", SiteContoller.allCategory);
 router.get("/contact", SiteContoller.contact);
 router.get("/account", SiteContoller.account);
 router.get("/blog", SiteContoller.blog);
 router.get("/autocomplete", SiteContoller.autocomplete);
-router.post("/searchallcat", SiteContoller.searchallcat);
+router.post("/searchallcat", SiteContoller.searchAllCat);
 router.post("/add-to-cart", SiteContoller.addToCart);
 router.get("/del-cart-:id", SiteContoller.delCart);
 router.post("/update-cart", SiteContoller.updateCart);

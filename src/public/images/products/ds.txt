@@ -1,0 +1,4 @@
+1,cx
+2,kho khan
+3,cach giai quyet
+4,ke hoach trong tuan
