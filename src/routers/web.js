@@ -12,12 +12,17 @@ const AdvertisementContoller = require("../app/controllers/advertisement");
 const OrderController = require("../app/controllers/order");
 const BlogController = require("../app/controllers/blog");
 const StatisticalController = require("../app/controllers/statistical");
+const VoucherController = require("../app/controllers/voucher")
 
 
 //Goi middlewares
 const UploadMiddleware = require("../app/middlewares/upload");
 const AuthMiddleware = require("../app/middlewares/auth");
+const passport = require("passport")
+const passportConfig = require('../app/middlewares/passport');
 
+router.get('/auth/google',passport.authenticate('google-plus-token', { session: false }), AuthContoller.authGoogle)
+router.get("/secret",passport.authenticate("jwt",{session:false}),AuthContoller.secret)
 //===========admin================
 router.get("/admin",AuthMiddleware.checkAdmin,AdminController.index);
 
@@ -65,6 +70,7 @@ router.post("/admin/advertisements/delete/:id",AuthMiddleware.checkAdmin,Adverti
 
 
 //===========Site===============
+router.post("/voucher", SiteContoller.voucher);
 router.get("/", SiteContoller.home);
 router.get("/category-:slug.:id", SiteContoller.category);
 router.get("/product-:slug.:id", SiteContoller.product);
@@ -144,5 +150,13 @@ router.post("/admin/blogs/store",AuthMiddleware.checkAdmin,UploadMiddleware.sing
 router.get("/admin/blogs/edit/:id",AuthMiddleware.checkAdmin,BlogController.edit);
 router.post("/admin/blogs/update/:id",AuthMiddleware.checkAdmin,UploadMiddleware.single("thumbnail"),BlogController.update);
 router.post("/admin/blogs/delete/:id",AuthMiddleware.checkAdmin,BlogController.dele);
+
+//===========Discount code===============
+/* router.get("/admin/voucher",AuthMiddleware.checkAdmin,VoucherController.index); */
+router.get("/admin/voucher/create"/* ,AuthMiddleware.checkAdmin */,VoucherController.create);
+router.post("/admin/voucher/store"/* ,AuthMiddleware.checkAdmin */,VoucherController.store);
+/* router.get("/admin/voucher/edit/:id",AuthMiddleware.checkAdmin,VoucherController.edit);
+router.post("/admin/voucher/update/:id",AuthMiddleware.checkAdmin,VoucherController.update);
+router.post("/admin/voucher/delete/:id",AuthMiddleware.checkAdmin,VoucherController.dele); */
 
 module.exports = router;

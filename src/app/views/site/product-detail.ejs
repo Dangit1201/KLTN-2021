@@ -52,6 +52,7 @@
                                         <div class="quantity">
                                             <h4>Số lượng:</h4>
                                             <div class="qty">
+                                                <input type="hidden" id="idPrd" name="id" value="<%=product.id%>">
                                                 <button id="btnmul" type="button" class="btn-minus" disabled = "true" style = "background-color:rgb(120, 120, 120)"><i class="fa fa-minus"></i></button>
                                                 <input id="inputprice" type="text" name="qty"value="1" readonly="true">
                                                 <button id="btnadd" type="button" class="btn-plus" ><i class="fa fa-plus" ></i></button>
@@ -101,11 +102,9 @@
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="pill" href="#specification">Các khuyến mãi</a>
                                     </li>
+                        
                                     <li class="nav-item">
-                                        <a class="nav-link" data-toggle="pill" href="#reviews"> Đánh giá 
-                                            <% var i=0; for(c of comments) { i++ %>
-                                            <% }  %>
-                                            (<%=i%>)</a>
+                                        <a class="nav-link" data-toggle="pill" href="#reviews"> Đánh giá </a>
                                     </li>
                                 </ul>
 
@@ -120,8 +119,9 @@
                                         
                                     </div>
                                     <div id="reviews" class="container tab-pane fade">
-                                        <% for(comment of comments) { %>
+                                        
                                             <div class="reviews-submitted">
+                                                <% for(comment of comments) { %>
                                                 <div class="reviewer">
                                                     <%= comment.full_name %> - <span><%=comment.createdAt.toLocaleString('vi-VN')%></span></div>
                                                 <div class="ratting">
@@ -135,14 +135,16 @@
                                                                                 <% } %>
                                                                                     <% if(comment.rating >= 5) {  %> <i class="fa fa-star"></i>
                                                                                         <% } %>
+                                                                                    </p>
                                                 </div>
-                                                <p>
+                                                
                                                     <%=comment.body%>
                                                 </p>
-                                                
+                                                <% } %>
                                             </div>
-                                            <% } %>
-                                            <div class="panel-footer">
+                                            
+                           
+                                            <!-- <div class="panel-footer">
                                                 <nav aria-label="Page navigation example">
                                                     <ul class="pagination">
                                                         <%if(page > 1){%>
@@ -157,23 +159,24 @@
                                                            
                                                     </ul>
                                                 </nav>
-                                            </div>
+                                            </div> -->
                                             
-                                                <form  method="post">
+                                               <!--  <form  method="post"> -->
+                                                  
                                                     <div class="reviews-submit">
                                                         <div class="field">
                                                             <h4>Viết đánh giá của bạn:</h4>
                                                             <div class="control">
                                                                 <div class="rating ratingbl">
-                                                                    <input  type="radio" name="star" id="star1" value="5"><label for="star1">
+                                                                    <input type="radio" name="star" id="star5" value="5"><label for="star5">
                                                                 </label>
-                                                                    <input  type="radio" name="star" id="star2" value="4"><label for="star2">
+                                                                    <input   type="radio" name="star" id="star4" value="4"><label for="star4">
                                                                 </label>
-                                                                    <input  type="radio" name="star" id="star3" value="3"><label for="star3">
+                                                                    <input   type="radio" name="star" id="star3" value="3"><label for="star3">
                                                                 </label>
-                                                                    <input  type="radio" name="star" id="star4" value="2"><label for="star4">
+                                                                    <input   type="radio" name="star" id="star2" value="2"><label for="star2">
                                                                 </label>
-                                                                    <input  type="radio" name="star" id="star5" value="1"><label for="star5">
+                                                                    <input  type="radio" name="star" id="star1" value="1"><label for="star1">
                                                                 </label>
                                                                 </div>
                                                             </div>
@@ -181,21 +184,21 @@
     
                                                         <div class="row form clearfix">
                                                             <div class="col-sm-6">
-                                                                <input name="full_name" required type="text" placeholder="Tên">
+                                                                <input id="idFullName" name="full_name" required type="text" placeholder="Tên" value="<%- user ? user.full_name : "" %>">
                                                             </div>
                                                             <div class="col-sm-6">
-                                                                <input name="email" required  type="email" placeholder="Email">
+                                                                <input id="idEmail" name="email" required  type="email" placeholder="Email" value="<%- user ? user.email : "" %>">
                                                             </div>
                                                             <div class="col-sm-12">
-                                                                <textarea name="body"  placeholder="Đánh giá..." required></textarea>
+                                                                <textarea id="idContent" name="body"  placeholder="Đánh giá..." required></textarea>
                                                             </div>
                                                             
                                                             <div class="col-sm-12">
-                                                                <button type="submit" name="sbm" class="btn btn-primary">Gửi</button>
+                                                                <button type="submit" name="sbm" class="btn btn-primary" id="btncomment">Gửi</button>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </form>
+                                               <!--  </form> -->
                                     </div>
                                 </div>
                             </div>
@@ -367,7 +370,32 @@
         </style>
         <%-include("layout/footer")%>
         <script> 
-        
+             $('#btncomment').click(function(){
+
+            var idFullName = $('#idFullName').val();
+            var idEmail = $('#idEmail').val();
+            var idContent = $('#idContent').val();
+            var star = $("input:radio[name=star]:checked").val();
+            var id = $('#idPrd').val();
+            
+            
+            
+            $.ajax({
+                async:false,
+                type:"POST",
+                url:"/product-:slug.:id",
+                contentType:"application/x-www-form-urlencoded",
+                dataType:"html",
+                data:{id:id,idFullName:idFullName,idEmail:idEmail,idContent:idContent,star:star},
+                success:function(response){
+                    $('.reviews-submitted').replaceWith(response);
+                    $('#idContent').val('');
+                },
+                error:function(xhr,ajaxOptions, thrownError){
+                    alert("Mã giảm giá không chính xác");
+                }
+            }); 
+        });   
            
         
            var total = document.getElementById('inputprice');

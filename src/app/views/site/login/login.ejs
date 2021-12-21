@@ -41,13 +41,44 @@
                                         <label>Mật khẩu</label>
                                         <input class="form-control" name="pass" type="password" required placeholder="Nhập mật khẩu" value="">
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-3">
+                                        <a
+                                            class="oauth-container btn darken-4 white black-text d-flex align-items-center"
+                                            href="/login/google"
+                                            style="text-transform: none"
+                                        >
+                                            <img
+												width="20px"
+												style="margin-right: 8px"
+												alt="Google sign-in"
+												src="/static/site/img/google.png"
+										    />
+                                            Google
+                                        </a>
+                                    </div>
+                                    <div class="col-md-3,5" >
+                                        <a  
+                                            class="oauth-container btn darken-4 white black-text d-flex align-items-center"
+                                            href="/login/facebook"
+                                            style="text-transform: none"
+                                        >
+                                            <img
+												width="20px"
+												style="margin-right: 8px"
+												alt="Facebook sign-in"
+												src="/static/site/img/facebook.png"
+										    />
+                                            Facebook
+                                        </a>
+                                    </div>
+                                    <div class="col-md-12 logincc" >
                                         <div class="custom-control custom-checkbox">
                                             <input type="checkbox" class="custom-control-input" id="newaccount">
                                             <label class="custom-control-label" for="newaccount">Nhớ đăng nhập</label>
                                         </div>
                                     </div>
-                                    <div class="col-md-12 text-center">
+                                    
+                                    <div class="col-md-12 text-center logincc" >
                                         <button class="btn" type="submit">Đăng nhập</button>
                                         
                                     </div>
@@ -76,7 +107,10 @@
             #registersite{
                 background :#ec1d1d;
                 
-            }   
+            }
+            .logincc{
+                padding-top:20px;
+            }  
         </style>
         
         <!-- Footer Start -->

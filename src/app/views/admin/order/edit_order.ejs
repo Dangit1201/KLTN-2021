@@ -44,6 +44,7 @@
                     <p class="content"><span class="ptable">Email: </span><%=order.email%></p>
                     <p class="content"><span class="ptable">Ngày mua: </span><%=order.createdAt.toLocaleDateString('vi-VN')%></p>
 					<p class="content"><span class="ptable">Thanh toán: </span><%=order.payment%></p>
+					<p class="content"><span class="ptable">Mã giảm giá: </span><%- order.voucher ? order.voucher : "Không có" %></p>
 					<p class="content"><span class="ptable">Tổng tiền hóa đơn: </span><%=new Intl.NumberFormat("vi-VN", {style: "currency", currency: "VND"}).format(order.totalprice)%></p>
 					</div> 
                 </div><!-- /.col-->

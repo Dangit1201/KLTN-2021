@@ -25,6 +25,9 @@ const orderSchema = mongoose.Schema({
     // không được trống
     required: true,
   },
+  voucher: {
+    type: String,
+  },
 
   note: {
     type: String,

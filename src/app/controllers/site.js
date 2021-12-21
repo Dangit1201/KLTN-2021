@@ -15,9 +15,46 @@ const dateFormat = require('dateformat');
 const sha256 = require('sha256');
 const querystring = require('qs');
 const bcrypt = require('bcryptjs');
+const VoucherModel = require("../models/voucher");
+const moment = require("moment");
 
 
 const home = async (req, res)=>{
+   /* const SinhVien = [
+          { msv: "SV1", ten: "Ngọc Anh" },
+          { msv: "SV2", ten: "Tiểu Bảo" },
+          { msv: "SV3", ten: "Hàn Lập" }
+      ];
+        const doDaiTenSinhVien = SinhVien.map(sv => {
+          const obj = {};
+
+          obj.msv = sv.msv;
+          obj.ten = sv.ten;
+          obj.voucher = "5";
+
+          return obj; 
+      });
+
+      // In ra kết quả
+      console.log(doDaiTenSinhVien); */
+
+    /* const SinhVien = [
+      { msv: "SV1", ten: "Ngọc Anh" },
+      { msv: "SV2", ten: "Tiểu Bảo" },
+      { msv: "SV3", ten: "Hàn Lập" }
+    ];
+    const doDaiTenSinhVien = SinhVien.map(sv => {
+      const obj = {};
+
+      obj[sv.msv] = sv.ten;
+      obj.doDaiTen = sv.ten.length;
+
+      return obj; 
+    });
+
+    // In ra kết quả
+    console.log(doDaiTenSinhVien); */
+
     const categoryLocal = await CategoryModel.find({ status : true }).lean().distinct('_id');
     const LatestProducts = await ProductModel.find().where('cat_id').in(categoryLocal).sort({_id: -1}).limit(6);
     const sliders = await AdvertisementsModel.find({typeofadv:"slider"}).sort({_id: -1}).limit(3);
@@ -253,6 +290,7 @@ const product = async (req, res)=>{
     const page = parseInt(req.query.page) || 1;
     const limit = 10;
     skip = page * limit - limit;
+    const user = await UserModel.findOne({email:req.session.email_user})
 
     const total = await CommentModel.find({prd_id: id}).countDocuments();
     const totalPage = Math.ceil(total/limit);
@@ -270,6 +308,7 @@ const product = async (req, res)=>{
         pages: paginate(page, totalPage),
         page: page,
         totalPage: totalPage,
+        user,
     });
 }
 
@@ -278,18 +317,19 @@ const success = (req, res)=>{
     res.render("site/success");
 }
 const comment = async (req, res)=>{
-    const id = req.params.id.toString();
-    const productComment = await ProductModel.findById(id);
+    const productComment = await ProductModel.findById(req.body.id);
     const comment = {
-        prd_id: id,
+        prd_id: req.body.id,
         rating: req.body.star,
-        full_name: req.body.full_name,
-        email: req.body.email,
-        body: req.body.body,
+        full_name: req.body.idFullName,
+        email: req.body.idEmail,
+        body: req.body.idContent,
         name: productComment.name,
     }
     await new CommentModel(comment).save();
-    res.redirect(req.path);
+    const commentPrd = await CommentModel.find({prd_id:req.body.id});
+    const user = await UserModel.findOne({email:req.session.email_user})
+    res.render("site/components/comment",{commentPrd,user});
 }
 
 const allCategory = async (req, res)=>{
@@ -528,6 +568,14 @@ const searchAllCat = async (req, res)=>{
     res.render("site/components/table",{products,keyword});
 }
 const cart = (req, res)=>{
+    const products1 = req.session.cart;
+    const cartNew = products1.map(a => {
+      const obj = {...a};
+      obj.voucher = "";
+      obj.totalAllPrice = "";
+      return obj; 
+    })
+    req.session.cart = cartNew;
     const products = req.session.cart;
     var err='';
     res.render("site/cart",{products, totalPrice: 0,totalprd:0,totalPricePrd:0,err});
@@ -599,6 +647,7 @@ const updateCart = async(req, res) => {
 const checkout = async (req, res)=>{
 
         const products = req.session.cart;
+        
         var err="";
         var price=0;
         var idprdduplicateid ="";
@@ -637,13 +686,15 @@ const checkout = async (req, res)=>{
             }else{
                 totalPrice += product.qty * product.price
                 totalprd += product.qty
+                var totalAllPrice = product.totalAllPrice ||totalPrice;
             }
             
         }
-        const pass = req.session.pass_user;
+        console.log(totalprd);
+        console.log(products);
         const email = req.session.email_user;
-        const user = await UserModel.find({password: pass, email: email});
-        res.render("site/checkout",{user,totalPrice,totalprd});
+        const user = await UserModel.find({email: email});
+        res.render("site/checkout",{user,totalPrice,totalprd,totalAllPrice});
   
     
 }
@@ -653,10 +704,12 @@ const successcheckout = async (req, res)=>{
     const products = req.session.cart;
     if(body.pay==0){
         var today = new Date();
-        const iduser = await  UserModel.findOne({email:req.session.email_user,password:req.session.pass_user});
+        const iduser = await  UserModel.findOne({email:req.session.email_user});
         var totalimportprice =0;
         const idorder = iduser.id+'-'+today.getDate()+''+(today.getMonth()+1)+''+today.getFullYear()+''+today.getHours() + "" + today.getMinutes()+""+ today.getSeconds();
         for(let product of products){
+            var voucher =product.voucher || null;
+            
             totalimportprice +=product.qty*product.importprice; 
             if(product.id){
                 const productid = await ProductModel.findById(product.id);
@@ -676,6 +729,7 @@ const successcheckout = async (req, res)=>{
             await OrderdetailsModel(orderdetails).save();
         
         }
+        
         const order = {
             full_name: body.full_name,
             email: body.email.toLowerCase(),
@@ -685,11 +739,16 @@ const successcheckout = async (req, res)=>{
             totalprd:parseInt(body.totalprd),
             totalprice:parseInt(body.totalPrice),
             totalimportprice:parseInt(totalimportprice),
+            voucher:voucher,
             idorder:idorder,
             iduser:iduser.id,
             payment:"Chưa thanh toán",
             }
         await OrderModel(order).save();
+        if(voucher){
+          const voucher1= await VoucherModel.findOne({code:voucher});
+          await VoucherModel.updateOne({_id: voucher1.id}, {$set:{quantity:voucher1.quantity-1}});
+        }
         //gui mail
             // Lấy ra đường dẫn đến thư mục views
             const viewPath = req.app.get("views");
@@ -732,10 +791,11 @@ const successcheckout = async (req, res)=>{
 
         var today = new Date();
         
-        const iduser = await  UserModel.findOne({email:req.session.email_user,password:req.session.pass_user});
+        const iduser = await  UserModel.findOne({email:req.session.email_user});
         var totalimportprice =0;
         const idorder = iduser.id+'-'+today.getDate()+''+(today.getMonth()+1)+''+today.getFullYear()+''+today.getHours() + "" + today.getMinutes()+""+ today.getSeconds();
         for(let product of products){
+            var voucher =product.voucher;
             totalimportprice +=product.qty*product.importprice; 
             if(product.id){
                 const productid = await ProductModel.findById(product.id);
@@ -764,11 +824,16 @@ const successcheckout = async (req, res)=>{
             totalprd:parseInt(body.totalprd),
             totalprice:parseInt(body.totalPrice),
             totalimportprice:parseInt(totalimportprice),
+            voucher:voucher,
             idorder:idorder,
             iduser:iduser.id,
             payment:"Đã thanh toán online",
             }
         await OrderModel(order).save();
+        if(voucher){
+          const voucher1= await VoucherModel.findOne({code:voucher});
+          await VoucherModel.updateOne({_id: voucher1.id}, {$set:{quantity:voucher1.quantity-1}});
+        }
         //gui mail
             // Lấy ra đường dẫn đến thư mục views
             const viewPath = req.app.get("views");
@@ -1021,11 +1086,81 @@ const orderdelete= async (req,res)=>{
             let quantity = parseInt(product.quantity) + parseInt(y.qty);
             await ProductModel.updateOne({_id:y.idprd}, {$set: {quantity:quantity}});
     }
+    const voucher1= await VoucherModel.findOne({code:order.voucher});
+    await VoucherModel.updateOne({_id: voucher1.id}, {$set:{quantity:voucher1.quantity+1}});
+
     await OrderdetailsModel.updateMany({idorder:order.idorder}, {$set: {status:"Hủy đơn hàng"}});       
     await OrderModel.updateOne({idorder: id}, {$set: {status:"Hủy đơn hàng"}});
     res.redirect("/account");
 }
-
+const voucher= async (req, res)=>{
+  var products = req.session.cart;
+  var totalPrice=0;
+  var totalprd=0;
+  var err="";
+  const voucher = req.body.data;
+  console.log(products);
+  const todayDate = new Date();
+  const user = await UserModel.findOne({email:req.session.email_user});
+  const userVoucher = await OrderModel.find({iduser:user.id,voucher:voucher,status:["Tiếp nhận đơn hàng","Đã xác nhận đơn hàng", "Vận chuyển","Đã hoàn thành đơn hàng"]});
+  for(var product of products){
+     totalPrice += product.qty * product.price;
+     totalprd += product.qty
+  }
+  
+  const money = await VoucherModel.findOne({code:voucher})
+  console.log(products);
+  console.log(totalprd);
+  
+  if(money.timeEnd < money.timeStart || money.timeEnd < todayDate ){
+    var err="Hết hạn";
+    res.json({err});
+  } if(userVoucher==null){
+    var err="Bạn đã sử dụng 1 lần!";
+    res.json({err});
+  }else {
+    if(money.quantityMoney){
+      const percent = money.quantityMoney;
+      const x = String(Math.round(totalPrice - money.quantityMoney));
+      const surplus = (x.slice(-3)>500) ? (Number(x.slice(-4,-3))+1) :Number(x.slice(-4,-3));
+      console.log(surplus);
+      const y = Number(x.slice(0,-4) + (surplus) + x.slice(-3) -x.slice(-3));
+      const totalAllPrice = y;
+      const cartNew = products.map(a => {
+        const obj = {...a};
+        obj.voucher = voucher;
+        obj.totalAllPrice = totalAllPrice;
+        return obj; 
+      })
+      req.session.cart = cartNew;
+      console.log(req.session.cart);
+      res.json({totalAllPrice,money,totalPrice});
+    } else{
+      const percent = money.quantityPercent;
+      const moneySub = ((money.quantityPercent*totalPrice/100) > money.quantityMoneyMax) ? (money.quantityMoneyMax) : (money.quantityPercent*totalPrice/100)
+      const x = String(Math.round(totalPrice - (moneySub)));
+      const surplus = (x.slice(-3)>500) ? ((Number(x.slice(-4,-3))+1)) :Number(x.slice(-4,-3));
+      console.log(surplus);
+      const y = Number(x.slice(0,-4) + (surplus) + x.slice(-3) -x.slice(-3));
+      const totalAllPrice = y;
+      /* products.push({totalAllPrice:totalAllPrice,
+        voucher:voucher
+      })
+      var newObj =  products.reduce((a, b) => Object.assign(a, b), {}) */
+      const cartNew = products.map(a => {
+        const obj = {...a};
+        obj.voucher = voucher;
+        obj.totalAllPrice = totalAllPrice;
+        return obj; 
+      })
+      req.session.cart = cartNew;
+      console.log(req.session.cart);
+      res.json({totalAllPrice,money,totalPrice});
+    }
+  }
+  
+  /* res.render("site/voucher",{products, totalPrice: 0,totalprd:0,totalPricePrd:0,err}); */
+}
 
 module.exports = {
     home,
@@ -1053,6 +1188,8 @@ module.exports = {
     orderdelete,
     vnpayreturn,
     vnpayipn,
+    voucher,
+   
    
     
 }

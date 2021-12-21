@@ -56,7 +56,7 @@
                                     </div>
                                     <%}%>
                                     <input type="hidden" name="totalprd" value=<%=totalprd%>>
-                                    <input type="hidden" name="totalPrice" value=<%=totalPrice%>>
+                                    <input type="hidden" name="totalPrice" value=<%=totalAllPrice%>>
                                    
                                 </div>
                             </div>
@@ -70,7 +70,7 @@
                                 <h1>Tóm tắt giỏ hàng</h1>
                                 <p>Tổng số lượng:<span><%=totalprd%> sản phẩm</span></p>
                                 <p>Phí ship:<span>Miễn phí</span></p>
-                                <h2>Tổng tiền<span><%=totalPrice.toLocaleString('vi-VN')%>đ</span></h2>
+                                <h2>Tổng tiền<span><%- totalAllPrice ? totalAllPrice.toLocaleString('vi-VN') : "0 " %>đ</span></h2>
                             </div>
 
                             <div class="checkout-payment">

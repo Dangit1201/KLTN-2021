@@ -1,12 +1,17 @@
+require('dotenv').config()
+
 const express = require('express');
 const logger = require('morgan');
 const router = require("../routers/web");
 const config = require("config");
 const session = require("express-session");
+const cors = require("cors");
+const passport = require("passport")
+const os = require("os");
 
 
 const app = express();
-
+process.env.UV_THREADPOOL_SIZE = os.cpus().length;
 
 //middlewares
 //app.use(logger('dev'));
@@ -38,8 +43,8 @@ app.use(session({
 // Share
 app.use(require("../app/middlewares/cart"));
 app.use(require("../app/middlewares/share"));
-
-
+app.use(cors());
+app.use(passport.initialize());
 
 //routers
 app.use(router);

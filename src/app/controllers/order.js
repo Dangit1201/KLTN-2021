@@ -1,6 +1,7 @@
 const OrdersModel = require("../models/order");
 const OrderdetailsModel = require("../models/orderdetails");
 const ProductsModel = require("../models/product");
+const VoucherModel = require("../models/voucher");
 
 
 const index = async (req, res) => {
@@ -56,22 +57,19 @@ const update = async (req,res)=>{
 
 const dele = async (req, res) => {
     const id = req.params.id;
-    const order = await OrdersModel.find({_id:id});
-    for(let x of order){
-        const orderdetails = await OrderdetailsModel.find({idorder:x.idorder});
-        /* console.log(orderdetails); */
+    const order = await OrdersModel.findOne({_id:id});
+    const orderdetails = await OrderdetailsModel.find({idorder:order.idorder}); 
         for(let y of orderdetails){
-            /* console.log(y.idprd); */
-            /* console.log(y.qty); */
             const product = await ProductsModel.findById(y.idprd);
-        /*  console.log(product);
-            console.log(product.quantity); */
-            
             let quantity = parseInt(product.quantity) + parseInt(y.qty);
-            await ProductsModel.updateOne({_id:y.idprd}, {$set: {quantity:quantity}});
+            await ProductsModel.updateOne({_id:y.idprd}, {$set: {quantity:quantity}});  
         }
-        await OrderdetailsModel.updateMany({idorder: x.idorder}, {$set: {status:"Hủy đơn hàng"}});       
+    await OrderdetailsModel.updateMany({idorder: order.idorder}, {$set: {status:"Hủy đơn hàng"}});
+    if(order.voucher){
+      const voucher1= await VoucherModel.findOne({code:order.voucher});
+    await VoucherModel.updateOne({_id: voucher1.id}, {$set:{quantity:voucher1.quantity+1}});
     }
+    
     await OrdersModel.updateOne({_id: id}, {$set: {status:"Hủy đơn hàng"}});
     res.redirect("/admin/orders");
 };
@@ -110,21 +108,19 @@ const viewtransport = async (req, res) => {
 };
 const deletransport = async (req, res) => {
   const id = req.params.id;
-  const order = await OrdersModel.find({_id:id});
-  for(let x of order){
-      const orderdetails = await OrderdetailsModel.find({idorder:x.idorder});
+  const order = await OrdersModel.findOne({_id:id});
+  
+      const orderdetails = await OrderdetailsModel.find({idorder:order.idorder});
       /* console.log(orderdetails); */
       for(let y of orderdetails){
-          /* console.log(y.idprd); */
-          /* console.log(y.qty); */
           const product = await ProductsModel.findById(y.idprd);
-      /*  console.log(product);
-          console.log(product.quantity); */
-          
           let quantity = parseInt(product.quantity) + parseInt(y.qty);
           await ProductsModel.updateOne({_id:y.idprd}, {$set: {quantity:quantity}});
       }
-      await OrderdetailsModel.updateMany({idorder:x.idorder}, {$set: {status:"Hủy đơn hàng"}});       
+  await OrderdetailsModel.updateMany({idorder:order.idorder}, {$set: {status:"Hủy đơn hàng"}});       
+  if(order.voucher){
+    const voucher1= await VoucherModel.findOne({code:order.voucher});
+  await VoucherModel.updateOne({_id: voucher1.id}, {$set:{quantity:voucher1.quantity+1}});
   }
   await OrdersModel.updateOne({_id: id}, {$set: {status:"Hủy đơn hàng"}});
   res.redirect("/admin/ordertransport");

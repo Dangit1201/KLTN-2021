@@ -1,6 +1,29 @@
 require('dotenv').config();
 const UserModel = require("../models/user");
 const nodemailer= require("nodemailer");
+const JWT = require('jsonwebtoken')
+const config = require("config");
+
+const encodedToken = (userID) => {
+  return JWT.sign({
+    iss: 'Pham Van Dang',
+    sub: userID,
+    iat: new Date().getTime(),
+    exp: new Date().setDate(new Date().getDate() + 3)
+  }, config.get("auth").JWT_SECRET)
+}
+
+const secret = async (req,res,next) => {
+  console.log("asadjsadjdj");
+};
+
+const authGoogle = async (req, res, next) => {
+  // Assign a token
+  const token = encodedToken(req.user._id)
+
+  res.setHeader('Authorization', token)
+  return res.status(200).json({ success: true })
+};
 
 const Login = (req, res) => {
   res.render("site/login/login", { data: {} });
@@ -39,7 +62,7 @@ const postLogin = async (req, res) => {
 const register = (req, res)=>{
     res.render("site/login/register",{ data: {} });
 }
-const registersuccess = async (req, res)=>{
+const registersuccess = async (req, res,next)=>{
     const body = req.body;
     let error;
     const email = body.email;
@@ -56,8 +79,11 @@ const registersuccess = async (req, res)=>{
         password: body.pass,
         }
         
-        await new UserModel(user).save();
-        res.render("site/login/registersuccess");
+        const newUser = await new UserModel(user);
+        newUser.save();
+        const token = encodedToken(newUser._id)
+        res.setHeader('Authorization', token);
+        res.render("site/login/registersuccess",{token});
     }
   
     res.render("site/login/register",{data: {error: error}});
@@ -181,4 +207,6 @@ module.exports = {
     postFoget:postFoget,
     resetpass:resetpass,
     resetpass2:resetpass2,
+    secret,
+    authGoogle
 };

@@ -7,26 +7,39 @@ const userSchema = mongoose.Schema({
   full_name: {
     type: String,
     // không được để trống
-    required: true,
+   /*  required: true, */
    // text: true,
   },
 
   email: {
     type: String,
     // không được để trống
-    required: true,
+    /* required: true, */
+    unique: true,
   },
   phone: {
     type: String,
     // không được trống
-    required: true,
+    /* required: true, */
   },
   address: {
     type: String,
     // không được trống
-    required: true,
+   /*  required: true, */
   },
-
+  authGoogleID: {
+    type: String,
+    default: null
+  },
+  authFacebookID: {
+    type: String,
+    default: null
+  },
+  authType: {
+    type: String,
+    enum: ['local', 'google', 'facebook'],
+    default: 'local'
+  },
   password: {
     type: String,
     default: null,

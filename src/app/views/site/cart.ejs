@@ -92,12 +92,12 @@
                                             </td>
                                             <td>
                                                 <div class="qty">
-                                                    <button onclick="clickmul()" id="btnmul" type="submit" class="btn-minus" ><i class="fa fa-minus"></i></button>
+                                                    <button  id="btnmul" type="submit" class="btn-minus" ><i class="fa fa-minus"></i></button>
                                                     <input name="products[<%=product.color%>][<%=product.id%>]" id="inputprice" class="inputprd" type="text"  value=<%=product.qty%> readonly="true" >
-                                                    <button  onclick="clickplus()" id="btnadd" type="submit" class="btn-plus" ><i class="fa fa-plus" ></i></button>
+                                                    <button   id="btnadd" type="submit" class="btn-plus" ><i class="fa fa-plus" ></i></button>
                                                 </div>
                                             </td>
-                                            <td><%=(product.qty*product.price).toLocaleString('vi-VN')%>đ%></td>
+                                            <td><%=(product.qty*product.price).toLocaleString('vi-VN')%>đ</td>
                                             <td><a href="/del-cart-<%=product.id%>" class="btn"><i class="fa fa-trash"></i></a></td>
                                         </tr>
                                         <% }%>
@@ -112,7 +112,13 @@
                     <div class="col-lg-4">
                         <div class="cart-page-inner">
                             <div class="row">
-                                
+                                <div class="col-md-12">
+                                    <div class="coupon">
+                                        <input type="text" placeholder="Code giảm giá" name="voucherCode" id="voucherCodeInput" >
+                                        <button id="enter">Nhập Code</button>
+                                        
+                                    </div>
+                                </div>
                                 <div class="col-md-12">
                                     <div class="cart-summary">
                                         <% if(err){%>
@@ -122,7 +128,9 @@
                                             <h1>Tóm tắt giỏ hàng</h1>
                                             <p>Tổng số lượng:<span><%=totalprd%> sản phẩm</span></p>
                                             <p>Phí ship:<span>Miễn phí</span></p>
-                                            <h2>Tổng tiền<span><%=totalPrice.toLocaleString('vi-VN')%>đ%></span></h2>
+                                            
+                                            <p id="idStatus1">Voucher:<span id="spanStatus1">Không có</span></p>
+                                            <h2>Tổng tiền<span id="spanTotal"><%=totalPrice.toLocaleString('vi-VN')%>đ%></span></h2>
                                         </div>
                                   
                                         <div  class="cart-btn" id="cart-btn">
@@ -213,6 +221,41 @@
                  
          </script>
          <script>
+
+             $('#enter').click(function(){  
+     
+					var data = $('#voucherCodeInput').val();
+                    var spanTotal = document.getElementById('spanTotal');
+                    
+                    var spanStatus1 = document.getElementById('spanStatus1');
+                    var idStatus1 = document.getElementById('idStatus1');
+                   /*  console.log(data); */
+                    $.ajax({
+                    async:false,
+                    type:"POST",
+                    url:"/voucher",
+                    contentType:"application/x-www-form-urlencoded",
+                    dataType:"html",
+                    data:{data:data},
+                    success:function(response){
+                        var obj = JSON.parse(response);
+                        console.log(obj);
+                        if(obj.err){
+                            console.log(obj.err);
+                            spanStatus1.innerHTML = obj.err;
+                           
+                        } else {
+                            console.log(obj);
+                            spanStatus1.innerHTML ="Giảm"+" "+(obj.totalPrice-obj.totalAllPrice).toLocaleString('vi-VN') +"đ" ;
+                            spanTotal.innerHTML = obj.totalAllPrice.toLocaleString('vi-VN') +"đ";
+                        }
+                        
+                    },
+                    error:function(xhr,ajaxOptions, thrownError){
+                        alert("Mã giảm giá không chính xác");
+                    }
+                }); 
+            });   
             $('#btn-register').click(function() {
             window.location.href = '/';
             return false;

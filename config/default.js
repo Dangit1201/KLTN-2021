@@ -1,3 +1,4 @@
+require('dotenv').config()
 // bat buoc phai export ra Object
 module.exports = {
     // config cho app
@@ -19,7 +20,7 @@ module.exports = {
       secure: false,
       auth: {
           user: "dangkhoashopdt@gmail.com",
-          pass: "Dang147896",
+          pass: "Dangit1201",
       }
   },
   vnpay:{
@@ -27,6 +28,17 @@ module.exports = {
       vnp_HashSecret:"EMBZEVYPRELTTBLYFBNEHCDYFXDBEBAH",
       vnp_Url:"http://sandbox.vnpayment.vn/paymentv2/vpcpay.html",
       vnp_ReturnUrl: "http://localhost:3001/vnpay_return"
+  },
+  auth: {
+    JWT_SECRET: process.env.JWT_SECRET,
+    google: {
+      CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+      CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET
+    },
+    facebook: {
+      CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
+      CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET
+    }
   }
 
   };
