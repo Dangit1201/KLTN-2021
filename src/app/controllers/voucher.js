@@ -1,6 +1,10 @@
 const VoucherModel = require("../models/voucher");
 const moment = require("moment");
 
+const index = async (req, res) => { 
+  var err;   
+    res.render("admin/voucher/voucher",{err});
+};
 const create = async (req, res) => { 
   var err;   
     res.render("admin/voucher/add_voucher",{err});
@@ -61,5 +65,6 @@ const store = async (req, res) => {
 
 module.exports = {
   create,
-  store
+  store,
+  index
 };

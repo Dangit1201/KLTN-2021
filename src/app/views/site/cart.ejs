@@ -252,7 +252,8 @@
                         
                     },
                     error:function(xhr,ajaxOptions, thrownError){
-                        alert("Mã giảm giá không chính xác");
+                        alert("Bạn phải đăng nhập để sử dụng mã Voucher!");
+                        window.location="/login";
                     }
                 }); 
             });   

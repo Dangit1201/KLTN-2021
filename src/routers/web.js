@@ -21,7 +21,14 @@ const AuthMiddleware = require("../app/middlewares/auth");
 const passport = require("passport")
 const passportConfig = require('../app/middlewares/passport');
 
-router.get('/auth/google',passport.authenticate('google-plus-token', { session: false }), AuthContoller.authGoogle)
+//login fb and gg
+router.get('/auth/google',passport.authenticate('google', { scope: ["https://www.googleapis.com/auth/userinfo.profile",
+"https://www.googleapis.com/auth/userinfo.email"]}));
+router.get('/auth/facebook',passport.authenticate('facebook'));
+router.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/login' }),AuthContoller.authFacebook);
+router.get('/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/login' }),AuthContoller.authGoogle);
 router.get("/secret",passport.authenticate("jwt",{session:false}),AuthContoller.secret)
 //===========admin================
 router.get("/admin",AuthMiddleware.checkAdmin,AdminController.index);
@@ -152,7 +159,7 @@ router.post("/admin/blogs/update/:id",AuthMiddleware.checkAdmin,UploadMiddleware
 router.post("/admin/blogs/delete/:id",AuthMiddleware.checkAdmin,BlogController.dele);
 
 //===========Discount code===============
-/* router.get("/admin/voucher",AuthMiddleware.checkAdmin,VoucherController.index); */
+router.get("/admin/voucher"/* ,AuthMiddleware.checkAdmin */,VoucherController.index);
 router.get("/admin/voucher/create"/* ,AuthMiddleware.checkAdmin */,VoucherController.create);
 router.post("/admin/voucher/store"/* ,AuthMiddleware.checkAdmin */,VoucherController.store);
 /* router.get("/admin/voucher/edit/:id",AuthMiddleware.checkAdmin,VoucherController.edit);

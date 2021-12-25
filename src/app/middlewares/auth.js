@@ -9,7 +9,7 @@ const checkLoginAdmin = (req, res, next) => {
 
   const checkLoginUser = (req, res, next) => {
     if (req.session.email_user && req.session.pass_user) {
-      return res.redirect("/account");
+      return res.redirect("/cart");
     }
     next(); // sau khi xu ly xong ben tren se next chuyen den controller
   };

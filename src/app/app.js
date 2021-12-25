@@ -37,7 +37,8 @@ app.use(session({
   secret: config.get("app").session_key,
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: config.get("app").session_secure }
+  cookie: { secure: config.get("app").session_secure },
+  maxAge:3600000
 }));
 
 // Share

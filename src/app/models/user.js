@@ -44,7 +44,10 @@ const userSchema = mongoose.Schema({
     type: String,
     default: null,
   },
-
+  isVerified:{
+    type: Boolean,
+    default: 'false'
+  },
   role: {
     type: String,
     // người dùng chỉ được phép nhập giá trị thuộc tập mảng enum

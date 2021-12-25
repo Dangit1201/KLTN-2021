@@ -1,10 +1,9 @@
 const passport = require("passport");
 const JwtStrategy = require("passport-jwt").Strategy;
-/* const LocalStrategy = require("passport-local").Strategy; */
-const GooglePlusTokenStrategy = require("passport-google-plus-token");
-/* const FacebookTokenStrategy = require('passport-facebook-token'); */
+const FacebookStrategy = require('passport-facebook').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const LocalStrategy = require('passport-local').Strategy;
 const { ExtractJwt } = require("passport-jwt");
-/* const { JWT_SECRET, auth } = require("../configs"); */
 const config = require("config");
 const User = require("../models/user");
 
@@ -30,86 +29,110 @@ passport.use(
   )
 );
 
-// Passport Google
-passport.use(
-  new GooglePlusTokenStrategy(
-    {
-      clientID: '271919359104-vf58bpnds51hsmdma51e6vcl6r2720vh.apps.googleusercontent.com',
-      clientSecret: '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',
-      
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      try {
-        console.log('accessToken ', accessToken)
-        console.log('refreshToken ', refreshToken)
-        console.log('profile ', profile)
-        // check whether this current user exists in our database
-        const user = await User.findOne({
-          authGoogleID: profile.id,
-          authType: "google",
-        });
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+})
 
-        if (user) return done(null, user)
+passport.deserializeUser((user, done) => {
+  done(null, user);
+})
 
-        // If new account
-        const newUser = new User({
-          authType: 'google',
-          authGoogleID: profile.id,
-          email: profile.emails[0].value,
-          firstName: profile.name.givenName,
-          lastName: profile.name.familyName
-        })
+passport.use(new GoogleStrategy({
+  clientID: '284749127522-hse026gfpek5srij24g1jg93tircb91c.apps.googleusercontent.com',
+  clientSecret: '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',
+  callbackURL: "/auth/google/callback"
+},
+async (accessToken, refreshToken, profile,cb) => {
+  console.log(profile);
+  // check whether this current user exists in our database
+  console.log( profile);
+  const user = await User.findOne({
+    authGoogleID: profile.id,
+    authType: "google",
+  });
+  
+  // If new account
+  const newUser = new User({
+    authType: 'google',
+    authGoogleID: profile.id,
+    email: profile.emails[0].value,
+    full_name: profile.displayName,
+    isVerified : 'true'
+  })
 
-        await newUser.save()
-
-        done(null, newUser)
-      } catch (error) {
-        console.log('error ', error)
-        done(error, false);
-      }
+  if (user) {
+    if (user.authGoogleID == undefined) {
+      user.authGoogleID= profile.id,
+      user.email = profile.emails[0].value,
+      user.full_name = profile.displayName,
+      user.isVerified = 'true'
+      await user.save();
     }
-  )
-);
-
-
-// Passport Facebook
-/* passport.use(
-  new FacebookTokenStrategy(
-    {
-      clientID: auth.facebook.CLIENT_ID,
-      clientSecret: auth.facebook.CLIENT_SECRET,
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      try {
-        // check whether this current user exists in our database
-        const user = await User.findOne({
-          authFacebookID: profile.id,
-          authType: "google",
-        });
-
-        if (user) return done(null, user)
-
-        // If new account
-        const newUser = new User({
-          authType: 'facebook',
-          authFacebookID: profile.id,
-          email: profile.emails[0].value,
-          firstName: profile.name.givenName,
-          lastName: profile.name.familyName
-        })
-
-        await newUser.save()
-
-        done(null, newUser)
-      } catch (error) {
-        console.log('error ', error)
-        done(error, false);
+     cb(null, newUser)
+  } else {
+    await newUser.save((err) => {
+      if (err) {
+        console.log(err);
+         throw err;
       }
-    }
-  )
-);
+      cb(null, newUser)
+    });
+  }
+}
+));
 
-// Passport local
+passport.use(new FacebookStrategy({
+  clientID: '290623686453773',
+  clientSecret: '46e4fbc50197f9501237b06e51045cef',
+  callbackURL: "/auth/facebook/callback",
+  profileFields: ["email", "name","displayName"]
+},
+async (accessToken, refreshToken, profile, cb) => { 
+  
+    // check whether this current user exists in our database
+    console.log( profile);
+    const user = await User.findOne({
+      authFacebookID: profile.id,
+      authType: "facebook",
+    });
+    
+ 
+    // If new account
+    const newUser = new User({
+      authType: 'facebook',
+      authFacebookID: profile.id,
+      email: profile.emails[0].value,
+      full_name: profile.displayName,
+      isVerified : 'true'
+    })
+    
+    if (user) {
+      if (user.authFacebookID == undefined) {
+        console.log("a")
+        user.authFacebookID= profile.id,
+        user.email = profile.emails[0].value,
+        user.full_name = profile.displayName,
+        user.isVerified = 'true'
+        await user.save();
+        req.session.email_user = profile.emails[0].value;
+      }
+      cb(null, newUser)
+    } else {
+      console.log("b")
+      await newUser.save((err) => {
+        if (err) {
+          console.log(err);
+          throw err;
+        }
+        req.session.email_user = profile.emails[0].value;
+        cb(null, newUser)
+      });
+    }
+}
+));
+
+
+/* // Passport local
 passport.use(
   new LocalStrategy(
     {
@@ -131,4 +154,4 @@ passport.use(
       }
     }
   )
-); */
+);  */

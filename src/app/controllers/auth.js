@@ -3,6 +3,7 @@ const UserModel = require("../models/user");
 const nodemailer= require("nodemailer");
 const JWT = require('jsonwebtoken')
 const config = require("config");
+const passport = require('passport');
 
 const encodedToken = (userID) => {
   return JWT.sign({
@@ -17,12 +18,24 @@ const secret = async (req,res,next) => {
   console.log("asadjsadjdj");
 };
 
-const authGoogle = async (req, res, next) => {
-  // Assign a token
-  const token = encodedToken(req.user._id)
+const authGoogle = async (req, res) => {
+ 
+  const totalCartItems1 = await req.session.cart.reduce((total, product)=>total + product.qty, 0);
+    if ( totalCartItems1 > 0) {
+      res.redirect("/cart");
+    } else{
+        res.redirect("/");
+    }
+	
+};
 
-  res.setHeader('Authorization', token)
-  return res.status(200).json({ success: true })
+const authFacebook = async (req, res) => {
+  const totalCartItems1 = await req.session.cart.reduce((total, product)=>total + product.qty, 0);
+    if ( totalCartItems1 > 0) {
+      res.redirect("/cart");
+    } else{
+        res.redirect("/");
+    }
 };
 
 const Login = (req, res) => {
@@ -45,11 +58,11 @@ const postLogin = async (req, res) => {
 
    if (user && (await user.isPasswordMatch(password)) && totalCartItems1 > 0) {
     req.session.email_user = email;
-    req.session.pass_user = password; 
-    res.redirect("/checkout");
+    req.session.pass_user = user;
+    res.redirect("/cart");
     } else if (user && (await user.isPasswordMatch(password)) ) {
       req.session.email_user = email;
-      req.session.pass_user = password; 
+      req.session.pass_user = user;
       res.redirect("/");
       }
     else{
@@ -208,5 +221,6 @@ module.exports = {
     resetpass:resetpass,
     resetpass2:resetpass2,
     secret,
-    authGoogle
+    authGoogle,
+    authFacebook
 };

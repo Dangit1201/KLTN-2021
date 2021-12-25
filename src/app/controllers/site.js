@@ -54,7 +54,7 @@ const home = async (req, res)=>{
 
     // In ra kết quả
     console.log(doDaiTenSinhVien); */
-
+    
     const categoryLocal = await CategoryModel.find({ status : true }).lean().distinct('_id');
     const LatestProducts = await ProductModel.find().where('cat_id').in(categoryLocal).sort({_id: -1}).limit(6);
     const sliders = await AdvertisementsModel.find({typeofadv:"slider"}).sort({_id: -1}).limit(3);
@@ -317,6 +317,22 @@ const success = (req, res)=>{
     res.render("site/success");
 }
 const comment = async (req, res)=>{
+  const userComment = await CommentModel.find({prd_id:req.body.id,email:req.body.idEmail});
+  console.log(userComment)
+  const userOrder = await OrderModel.find({email:req.body.idEmail,status:["Đã hoàn thành đơn hàng"]});
+  console.log(userOrder)
+  for(var a of userOrder){
+    var b = await OrderdetailsModel.findOne({idorder:a.idorder,idprd:req.body.id});
+  }
+  if(b==null){
+    error = "Bạn chưa mua sản phẩm này !";
+    res.send(JSON.stringify({error}));
+    /* res.json({error}); */
+  }else if(userComment.length>0){
+    error = "Bạn đã bình luận sản phẩm này !";
+    /* res.json({error}); */
+    res.send(JSON.stringify({error}));
+  }else{
     const productComment = await ProductModel.findById(req.body.id);
     const comment = {
         prd_id: req.body.id,
@@ -328,9 +344,11 @@ const comment = async (req, res)=>{
     }
     await new CommentModel(comment).save();
     const commentPrd = await CommentModel.find({prd_id:req.body.id});
-    const user = await UserModel.findOne({email:req.session.email_user})
-    res.render("site/components/comment",{commentPrd,user});
+    res.render("site/components/comment",{commentPrd});
+  }
 }
+    
+
 
 const allCategory = async (req, res)=>{
     let sort = req.query.sort;
@@ -1075,14 +1093,10 @@ const orderdelete= async (req,res)=>{
     const order = await OrderModel.findOne({idorder:id});
     
     const orderdetails = await OrderdetailsModel.find({idorder:order.idorder});
-        /* console.log(orderdetails); */
+        
     for(let y of orderdetails){
-            /* console.log(y.idprd); */
-            /* console.log(y.qty); */
+           
             const product = await ProductModel.findById(y.idprd);
-        /*  console.log(product);
-            console.log(product.quantity); */
-            
             let quantity = parseInt(product.quantity) + parseInt(y.qty);
             await ProductModel.updateOne({_id:y.idprd}, {$set: {quantity:quantity}});
     }
@@ -1099,18 +1113,19 @@ const voucher= async (req, res)=>{
   var totalprd=0;
   var err="";
   const voucher = req.body.data;
-  console.log(products);
+  /* console.log(products); */
   const todayDate = new Date();
   const user = await UserModel.findOne({email:req.session.email_user});
-  const userVoucher = await OrderModel.find({iduser:user.id,voucher:voucher,status:["Tiếp nhận đơn hàng","Đã xác nhận đơn hàng", "Vận chuyển","Đã hoàn thành đơn hàng"]});
+  const id1= user.id || "";
+  const userVoucher = await OrderModel.find({iduser:id1,voucher:voucher,status:["Tiếp nhận đơn hàng","Đã xác nhận đơn hàng", "Vận chuyển","Đã hoàn thành đơn hàng"]});
   for(var product of products){
      totalPrice += product.qty * product.price;
      totalprd += product.qty
   }
   
   const money = await VoucherModel.findOne({code:voucher})
-  console.log(products);
-  console.log(totalprd);
+  /* console.log(products);
+  console.log(totalprd); */
   
   if(money.timeEnd < money.timeStart || money.timeEnd < todayDate ){
     var err="Hết hạn";
@@ -1123,7 +1138,7 @@ const voucher= async (req, res)=>{
       const percent = money.quantityMoney;
       const x = String(Math.round(totalPrice - money.quantityMoney));
       const surplus = (x.slice(-3)>500) ? (Number(x.slice(-4,-3))+1) :Number(x.slice(-4,-3));
-      console.log(surplus);
+     /*  console.log(surplus); */
       const y = Number(x.slice(0,-4) + (surplus) + x.slice(-3) -x.slice(-3));
       const totalAllPrice = y;
       const cartNew = products.map(a => {
@@ -1133,14 +1148,14 @@ const voucher= async (req, res)=>{
         return obj; 
       })
       req.session.cart = cartNew;
-      console.log(req.session.cart);
+      /* console.log(req.session.cart); */
       res.json({totalAllPrice,money,totalPrice});
     } else{
       const percent = money.quantityPercent;
       const moneySub = ((money.quantityPercent*totalPrice/100) > money.quantityMoneyMax) ? (money.quantityMoneyMax) : (money.quantityPercent*totalPrice/100)
       const x = String(Math.round(totalPrice - (moneySub)));
       const surplus = (x.slice(-3)>500) ? ((Number(x.slice(-4,-3))+1)) :Number(x.slice(-4,-3));
-      console.log(surplus);
+      /* console.log(surplus); */
       const y = Number(x.slice(0,-4) + (surplus) + x.slice(-3) -x.slice(-3));
       const totalAllPrice = y;
       /* products.push({totalAllPrice:totalAllPrice,
@@ -1154,12 +1169,12 @@ const voucher= async (req, res)=>{
         return obj; 
       })
       req.session.cart = cartNew;
-      console.log(req.session.cart);
+     /*  console.log(req.session.cart); */
       res.json({totalAllPrice,money,totalPrice});
     }
   }
   
-  /* res.render("site/voucher",{products, totalPrice: 0,totalprd:0,totalPricePrd:0,err}); */
+  
 }
 
 module.exports = {

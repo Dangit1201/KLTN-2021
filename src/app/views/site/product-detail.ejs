@@ -52,13 +52,13 @@
                                         <div class="quantity">
                                             <h4>Số lượng:</h4>
                                             <div class="qty">
-                                                <input type="hidden" id="idPrd" name="id" value="<%=product.id%>">
+                                                
                                                 <button id="btnmul" type="button" class="btn-minus" disabled = "true" style = "background-color:rgb(120, 120, 120)"><i class="fa fa-minus"></i></button>
                                                 <input id="inputprice" type="text" name="qty"value="1" readonly="true">
                                                 <button id="btnadd" type="button" class="btn-plus" ><i class="fa fa-plus" ></i></button>
                                             </div>
                                         </div>
-                                        
+                                        <input type="hidden" id="idPrd" name="id" value="<%=product.id%>">
                                         <div class="p-color">
                                             <h4>Màu:</h4>
                                             <div class="btn-group btn-group-sm">
@@ -369,8 +369,7 @@
             
         </style>
         <%-include("layout/footer")%>
-        <script> 
-             $('#btncomment').click(function(){
+        <script> $('#btncomment').click(function(){
 
             var idFullName = $('#idFullName').val();
             var idEmail = $('#idEmail').val();
@@ -388,14 +387,36 @@
                 dataType:"html",
                 data:{id:id,idFullName:idFullName,idEmail:idEmail,idContent:idContent,star:star},
                 success:function(response){
-                    $('.reviews-submitted').replaceWith(response);
-                    $('#idContent').val('');
+                   
+                    try {
+                        var obj = JSON.parse(response);
+                        alert(obj.error);
+                    } catch (error) {
+                        console.error(error);
+                        $('.reviews-submitted').replaceWith(response);
+                        $('#idContent').val('');
+                    }
+                   /*  function isObject(val) {
+                        return val instanceof Object; 
+                    }
+                    var obj = JSON.parse(response);
+                    console.log(response);
+                    console.log(isObject(obj));
+                    if(isObject(obj)==true){
+                        alert(obj.error);
+                        
+                    } else {
+                       
+                    }  */
                 },
                 error:function(xhr,ajaxOptions, thrownError){
-                    alert("Mã giảm giá không chính xác");
+                    alert("Lỗi");
                 }
             }); 
         });   
+        </script>
+        <script> 
+            
            
         
            var total = document.getElementById('inputprice');
